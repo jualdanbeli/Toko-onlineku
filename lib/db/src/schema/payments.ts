@@ -10,7 +10,9 @@ export const walletsTable = pgTable("wallets", {
   userId: integer("user_id").notNull().references(() => usersTable.id).unique(),
   balance: numeric("balance", { precision: 15, scale: 2 }).notNull().default("0"),
   pendingBalance: numeric("pending_balance", { precision: 15, scale: 2 }).notNull().default("0"),
+  frozenBalance: numeric("frozen_balance", { precision: 15, scale: 2 }).notNull().default("0"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const transactionsTable = pgTable("transactions", {

@@ -16,6 +16,7 @@ import supportRouter from "./support";
 import wishlistRouter from "./wishlist";
 import vouchersRouter from "./vouchers";
 import liveRouter from "./live";
+import moderationRouter from "./moderation";
 
 const router: IRouter = Router();
 
@@ -36,5 +37,6 @@ router.use(supportRouter);
 router.use(wishlistRouter);
 router.use(vouchersRouter);
 router.use(liveRouter);
+router.use(moderationRouter);
 
 export default router;
