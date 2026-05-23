@@ -1,7 +1,9 @@
 import { Router, type IRouter } from "express";
 import { db, ordersTable, orderItemsTable, productsTable, usersTable, disputesTable, walletsTable, transactionsTable, notificationsTable } from "@workspace/db";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
 import { requireAuth } from "../lib/auth";
+
+const PLATFORM_COMMISSION_RATE = 0.02;
 
 const router: IRouter = Router();
 
@@ -36,9 +38,9 @@ router.get("/orders", requireAuth, async (req, res): Promise<void> => {
   const userId = req.user!.id;
   let cond;
   if (role === "seller") {
-    cond = status ? and(eq(ordersTable.sellerId, userId), eq(ordersTable.status, status as string)) : eq(ordersTable.sellerId, userId);
+    cond = status ? and(eq(ordersTable.sellerId, userId), eq(ordersTable.status, status as any)) : eq(ordersTable.sellerId, userId);
   } else {
-    cond = status ? and(eq(ordersTable.buyerId, userId), eq(ordersTable.status, status as string)) : eq(ordersTable.buyerId, userId);
+    cond = status ? and(eq(ordersTable.buyerId, userId), eq(ordersTable.status, status as any)) : eq(ordersTable.buyerId, userId);
   }
   const orders = await db.select().from(ordersTable).where(cond as any).orderBy(desc(ordersTable.createdAt));
   const enriched = await Promise.all(orders.map(enrichOrder));
@@ -84,7 +86,7 @@ router.post("/orders", requireAuth, async (req, res): Promise<void> => {
 
   for (const item of orderItems) {
     await db.insert(orderItemsTable).values({ orderId: order.id, ...item });
-    await db.update(productsTable).set({ stock: db.$count(productsTable) }).where(eq(productsTable.id, item.productId));
+    await db.update(productsTable).set({ stock: sql`${productsTable.stock} - ${item.quantity}` }).where(eq(productsTable.id, item.productId));
   }
 
   // Create escrow transaction
@@ -154,22 +156,27 @@ router.post("/orders/:orderId/confirm-received", requireAuth, async (req, res): 
     status: "completed", escrowStatus: "released", updatedAt: new Date(),
   }).where(eq(ordersTable.id, orderId)).returning();
 
-  // Release payment to seller wallet
+  // Release payment to seller wallet minus platform commission (2%)
+  const grossAmount = parseFloat(order.totalAmount as string);
+  const commissionAmount = Math.round(grossAmount * PLATFORM_COMMISSION_RATE);
+  const netAmount = grossAmount - commissionAmount;
+
   const [sellerWallet] = await db.select().from(walletsTable).where(eq(walletsTable.userId, order.sellerId));
   if (sellerWallet) {
-    const newBalance = parseFloat(sellerWallet.balance as string) + parseFloat(order.totalAmount as string);
+    const newBalance = parseFloat(sellerWallet.balance as string) + netAmount;
     await db.update(walletsTable).set({ balance: newBalance.toString() }).where(eq(walletsTable.userId, order.sellerId));
   }
 
-  // Create transaction record
+  // Record net sale transaction for seller
   await db.insert(transactionsTable).values({
     userId: order.sellerId,
     orderId: order.id,
     type: "sale",
-    amount: order.totalAmount,
+    amount: netAmount.toString(),
     status: "completed",
-    description: `Pembayaran order #${order.id} diterima`,
+    description: `Pembayaran order #${order.id} (setelah komisi platform 2%)`,
   });
+
 
   // Notify seller
   await db.insert(notificationsTable).values({

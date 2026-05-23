@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Navbar } from "./Navbar";
+import { Link } from "wouter";
 import { ShieldCheck, Truck, HeadphonesIcon, CreditCard } from "lucide-react";
 
 interface MainLayoutProps {
@@ -22,55 +23,65 @@ export function MainLayout({ children }: MainLayoutProps) {
               </div>
               <span className="font-bold text-lg text-primary">jualdanbeli</span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Indonesia's trusted marketplace. Fast, secure, and vibrant trading for everyone.
+            <p className="text-sm text-muted-foreground mb-3">
+              Marketplace terpercaya Indonesia. Transaksi aman, cepat, dan terlindungi sistem Rekening Bersama.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              PT jualdanbeli Indonesia<br />
+              Terdaftar di Indonesia
             </p>
           </div>
-          
+
           <div>
-            <h3 className="font-semibold mb-4 text-foreground">Buy & Sell</h3>
+            <h3 className="font-semibold mb-4 text-foreground">Jual & Beli</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>How to Buy</li>
-              <li>How to Sell</li>
-              <li>Payment Methods</li>
-              <li>Shipping Options</li>
+              <li><Link href="/products" className="hover:text-primary transition-colors">Semua Produk</Link></li>
+              <li><Link href="/categories" className="hover:text-primary transition-colors">Kategori</Link></li>
+              <li><Link href="/seller/register" className="hover:text-primary transition-colors">Daftar Jadi Penjual</Link></li>
+              <li><Link href="/cart" className="hover:text-primary transition-colors">Keranjang Belanja</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4 text-foreground">Trust & Safety</h3>
+            <h3 className="font-semibold mb-4 text-foreground">Bantuan & Legal</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Escrow (Rekening Bersama)</li>
-              <li>Buyer Protection</li>
-              <li>Seller Protection</li>
-              <li>Report a Problem</li>
+              <li><Link href="/about" className="hover:text-primary transition-colors">Tentang Kami</Link></li>
+              <li><Link href="/terms" className="hover:text-primary transition-colors">Syarat & Ketentuan</Link></li>
+              <li><Link href="/privacy" className="hover:text-primary transition-colors">Kebijakan Privasi</Link></li>
+              <li><a href="mailto:cs@jualdanbeli.com" className="hover:text-primary transition-colors">Hubungi Kami</a></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4 text-foreground">Features</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col items-center p-2 bg-muted rounded-lg text-center">
+            <h3 className="font-semibold mb-4 text-foreground">Keunggulan Kami</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col items-center p-3 bg-muted rounded-lg text-center">
                 <ShieldCheck className="w-5 h-5 text-primary mb-1" />
-                <span className="text-[10px] font-medium">Safe Payment</span>
+                <span className="text-[10px] font-medium">Rekening Bersama</span>
               </div>
-              <div className="flex flex-col items-center p-2 bg-muted rounded-lg text-center">
-                <Truck className="w-5 h-5 text-secondary mb-1" />
-                <span className="text-[10px] font-medium">Fast Delivery</span>
+              <div className="flex flex-col items-center p-3 bg-muted rounded-lg text-center">
+                <Truck className="w-5 h-5 text-orange-500 mb-1" />
+                <span className="text-[10px] font-medium">Multi Kurir</span>
               </div>
-              <div className="flex flex-col items-center p-2 bg-muted rounded-lg text-center">
-                <HeadphonesIcon className="w-5 h-5 text-chart-3 mb-1" />
-                <span className="text-[10px] font-medium">24/7 Support</span>
+              <div className="flex flex-col items-center p-3 bg-muted rounded-lg text-center">
+                <HeadphonesIcon className="w-5 h-5 text-blue-500 mb-1" />
+                <span className="text-[10px] font-medium">CS 24/7</span>
               </div>
-              <div className="flex flex-col items-center p-2 bg-muted rounded-lg text-center">
-                <CreditCard className="w-5 h-5 text-chart-4 mb-1" />
-                <span className="text-[10px] font-medium">Many Options</span>
+              <div className="flex flex-col items-center p-3 bg-muted rounded-lg text-center">
+                <CreditCard className="w-5 h-5 text-green-500 mb-1" />
+                <span className="text-[10px] font-medium">Dompet Digital</span>
               </div>
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} jualdanbeli. All rights reserved.
+
+        <div className="max-w-7xl mx-auto px-4 mt-10 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+          <span>© {new Date().getFullYear()} PT jualdanbeli Indonesia. Hak cipta dilindungi undang-undang.</span>
+          <div className="flex gap-4">
+            <Link href="/terms" className="hover:text-primary transition-colors">Syarat & Ketentuan</Link>
+            <Link href="/privacy" className="hover:text-primary transition-colors">Kebijakan Privasi</Link>
+            <Link href="/about" className="hover:text-primary transition-colors">Tentang Kami</Link>
+          </div>
         </div>
       </footer>
     </div>

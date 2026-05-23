@@ -33,6 +33,10 @@ import AdminOrders from "@/pages/admin/orders";
 import AdminDisputes from "@/pages/admin/disputes";
 import AdminReports from "@/pages/admin/reports";
 import AdminWithdrawals from "@/pages/admin/withdrawals";
+import Terms from "@/pages/terms";
+import Privacy from "@/pages/privacy";
+import About from "@/pages/about";
+import SellerKYC from "@/pages/seller-kyc";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +79,12 @@ function Router() {
       <Route path="/admin/disputes" component={AdminDisputes} />
       <Route path="/admin/reports" component={AdminReports} />
       <Route path="/admin/withdrawals" component={AdminWithdrawals} />
+
+      {/* Legal & Info Pages */}
+      <Route path="/terms" component={Terms} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/about" component={About} />
+      <Route path="/seller/register" component={SellerKYC} />
 
       <Route component={NotFound} />
     </Switch>
