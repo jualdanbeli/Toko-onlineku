@@ -11,7 +11,8 @@ import {
   Store,
   LogOut,
   ShieldCheck,
-  HeadphonesIcon
+  HeadphonesIcon,
+  Heart
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -136,11 +137,18 @@ export function Navbar() {
                 )}
 
                 {(user?.role === "buyer" || user?.role === "seller") && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/support" className="cursor-pointer">
-                      <HeadphonesIcon className="w-4 h-4 mr-2" />Bantuan CS
-                    </Link>
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link href="/wishlist" className="cursor-pointer">
+                        <Heart className="w-4 h-4 mr-2" />Wishlist Saya
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/support" className="cursor-pointer">
+                        <HeadphonesIcon className="w-4 h-4 mr-2" />Bantuan CS
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
                 )}
 
                 <DropdownMenuSeparator />

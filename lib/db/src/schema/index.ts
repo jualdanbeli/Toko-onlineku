@@ -8,3 +8,5 @@ export * from "./shipping";
 export * from "./reviews";
 export * from "./messages";
 export * from "./notifications";
+export * from "./wishlist";
+export * from "./vouchers";

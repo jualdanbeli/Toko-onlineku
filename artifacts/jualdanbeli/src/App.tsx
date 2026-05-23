@@ -39,6 +39,8 @@ import About from "@/pages/about";
 import SellerKYC from "@/pages/seller-kyc";
 import Support from "@/pages/support";
 import AdminSupport from "@/pages/admin/support";
+import Wishlist from "@/pages/wishlist";
+import AdminVouchers from "@/pages/admin/vouchers";
 
 const queryClient = new QueryClient();
 
@@ -89,6 +91,8 @@ function Router() {
       <Route path="/seller/register" component={SellerKYC} />
       <Route path="/support" component={Support} />
       <Route path="/admin/support" component={AdminSupport} />
+      <Route path="/wishlist" component={Wishlist} />
+      <Route path="/admin/vouchers" component={AdminVouchers} />
 
       <Route component={NotFound} />
     </Switch>

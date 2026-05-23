@@ -13,6 +13,8 @@ import notificationsRouter from "./notifications";
 import adminRouter from "./admin";
 import dashboardRouter from "./dashboard";
 import supportRouter from "./support";
+import wishlistRouter from "./wishlist";
+import vouchersRouter from "./vouchers";
 
 const router: IRouter = Router();
 
@@ -30,5 +32,7 @@ router.use(notificationsRouter);
 router.use(adminRouter);
 router.use(dashboardRouter);
 router.use(supportRouter);
+router.use(wishlistRouter);
+router.use(vouchersRouter);
 
 export default router;
