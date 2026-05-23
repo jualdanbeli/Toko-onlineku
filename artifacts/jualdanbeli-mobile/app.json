@@ -55,8 +55,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "jualdanbeli-mobile"
+        "projectId": "c3afc1ac-8e21-4cb5-a27f-d17e40f48040"
       }
-    }
+    },
+    "owner": "jualdanbeli"
   }
 }
