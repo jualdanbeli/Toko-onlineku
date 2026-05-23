@@ -1326,6 +1326,79 @@ export const TrackShipmentResponse = zod.object({
 
 
 /**
+ * @summary Get list of cities (RajaOngkir)
+ */
+export const GetShippingCitiesQueryParams = zod.object({
+  "province": zod.coerce.string().optional()
+})
+
+export const GetShippingCitiesResponseItem = zod.object({
+  "city_id": zod.string().optional(),
+  "city_name": zod.string().optional(),
+  "province": zod.string().optional()
+})
+export const GetShippingCitiesResponse = zod.array(GetShippingCitiesResponseItem)
+
+
+/**
+ * @summary Get list of provinces (RajaOngkir)
+ */
+export const GetShippingProvincesResponseItem = zod.object({
+  "province_id": zod.string().optional(),
+  "province": zod.string().optional()
+})
+export const GetShippingProvincesResponse = zod.array(GetShippingProvincesResponseItem)
+
+
+/**
+ * @summary Request presigned URL for direct file upload to GCS
+ */
+export const RequestUploadUrlBody = zod.object({
+  "name": zod.string().describe('Original filename'),
+  "size": zod.number().describe('File size in bytes'),
+  "contentType": zod.string().describe('MIME type (e.g. image\/jpeg)')
+})
+
+export const RequestUploadUrlResponse = zod.object({
+  "uploadURL": zod.string().describe('Presigned URL to PUT the file directly to GCS'),
+  "objectPath": zod.string().describe('Normalized object path for serving (e.g. \/objects\/uploads\/uuid)')
+})
+
+
+/**
+ * @summary Serve stored object
+ */
+export const GetStorageObjectParams = zod.object({
+  "objectPath": zod.coerce.string()
+})
+
+
+/**
+ * @summary Get Midtrans Snap token for an order
+ */
+export const GetMidtransTokenBody = zod.object({
+  "orderId": zod.number()
+})
+
+export const GetMidtransTokenResponse = zod.object({
+  "token": zod.string().optional(),
+  "redirectUrl": zod.string().optional(),
+  "clientKey": zod.string().optional(),
+  "isProduction": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Get Midtrans client-side configuration
+ */
+export const GetMidtransConfigResponse = zod.object({
+  "clientKey": zod.string().optional(),
+  "isProduction": zod.boolean().optional(),
+  "enabled": zod.boolean().optional()
+})
+
+
+/**
  * @summary List all conversations
  */
 export const GetConversationsResponseItem = zod.object({

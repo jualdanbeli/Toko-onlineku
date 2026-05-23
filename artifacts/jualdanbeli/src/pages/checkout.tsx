@@ -8,13 +8,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { formatIDR } from "@/lib/format";
-import { ShieldCheck, Truck, Loader2, Tag, CheckCircle2, X } from "lucide-react";
+import { ShieldCheck, Truck, Loader2, Tag, CheckCircle2, X, CreditCard, Building2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 const API_BASE = "/api";
 const SHIPPING_COST = 25000;
+
+type PaymentMethod = "midtrans" | "escrow";
 
 async function applyVoucher(token: string, code: string, orderTotal: number) {
   const res = await fetch(`${API_BASE}/vouchers/apply`, {
@@ -25,6 +27,32 @@ async function applyVoucher(token: string, code: string, orderTotal: number) {
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Voucher tidak valid");
   return data as { discount: number; finalTotal: number; voucher: { code: string; type: string; value: number; description: string } };
+}
+
+async function getMidtransToken(token: string, orderId: number) {
+  const res = await fetch(`${API_BASE}/payments/midtrans/token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ orderId }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Gagal membuat token pembayaran");
+  return data as { token: string; redirectUrl: string; clientKey: string; isProduction: boolean; enabled: boolean };
+}
+
+function loadSnapScript(isProduction: boolean): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const scriptId = "midtrans-snap";
+    if (document.getElementById(scriptId)) { resolve(); return; }
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.src = isProduction
+      ? "https://app.midtrans.com/snap/snap.js"
+      : "https://app.sandbox.midtrans.com/snap/snap.js";
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Gagal memuat Midtrans Snap"));
+    document.head.appendChild(script);
+  });
 }
 
 export default function Checkout() {
@@ -40,6 +68,8 @@ export default function Checkout() {
   const [voucherCode, setVoucherCode] = useState("");
   const [voucherResult, setVoucherResult] = useState<{ discount: number; voucher: { code: string; type: string; value: number; description?: string } } | null>(null);
   const [applyingVoucher, setApplyingVoucher] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("midtrans");
+  const [paying, setPaying] = useState(false);
 
   const subtotal = cart?.subtotal ?? 0;
   const discount = voucherResult?.discount ?? 0;
@@ -69,6 +99,7 @@ export default function Checkout() {
       toast({ title: "Alamat diperlukan", description: "Masukkan alamat pengiriman Anda", variant: "destructive" });
       return;
     }
+
     createOrder.mutate({
       data: {
         fromCart: true,
@@ -78,10 +109,51 @@ export default function Checkout() {
         items: [],
       }
     }, {
-      onSuccess: (res) => {
-        toast({ title: "Pesanan berhasil dibuat!" });
+      onSuccess: async (order) => {
         queryClient.invalidateQueries({ queryKey: getGetCartQueryKey() });
-        setLocation(`/orders/${res.id}`);
+
+        if (paymentMethod === "midtrans") {
+          setPaying(true);
+          try {
+            const midtransData = await getMidtransToken(token, order.id);
+
+            if (!midtransData.enabled) {
+              toast({ title: "Gateway pembayaran belum aktif", description: "Lanjut ke escrow otomatis" });
+              setLocation(`/orders/${order.id}`);
+              return;
+            }
+
+            await loadSnapScript(midtransData.isProduction);
+
+            const snap = (window as any).snap;
+            if (!snap) throw new Error("Snap tidak tersedia");
+
+            snap.pay(midtransData.token, {
+              onSuccess: () => {
+                toast({ title: "Pembayaran berhasil! 🎉" });
+                setLocation(`/orders/${order.id}`);
+              },
+              onPending: () => {
+                toast({ title: "Pembayaran tertunda", description: "Selesaikan pembayaran sebelum batas waktu" });
+                setLocation(`/orders/${order.id}`);
+              },
+              onError: () => {
+                toast({ title: "Pembayaran gagal", description: "Silakan coba lagi", variant: "destructive" });
+              },
+              onClose: () => {
+                setLocation(`/orders/${order.id}`);
+              },
+            });
+          } catch (err: any) {
+            toast({ title: "Pembayaran gagal", description: err.message, variant: "destructive" });
+            setLocation(`/orders/${order.id}`);
+          } finally {
+            setPaying(false);
+          }
+        } else {
+          toast({ title: "Pesanan berhasil dibuat!", description: "Dana escrow ditahan hingga barang diterima" });
+          setLocation(`/orders/${order.id}`);
+        }
       },
       onError: (err: any) => {
         toast({ title: "Checkout gagal", description: err.message || "Terjadi kesalahan", variant: "destructive" });
@@ -99,6 +171,8 @@ export default function Checkout() {
       </MainLayout>
     );
   }
+
+  const isLoading = createOrder.isPending || paying;
 
   return (
     <MainLayout>
@@ -165,15 +239,57 @@ export default function Checkout() {
           {/* Payment method */}
           <Card>
             <CardHeader><CardTitle>Metode Pembayaran</CardTitle></CardHeader>
-            <CardContent>
-              <div className="border border-primary/30 bg-primary/5 rounded-xl p-6 flex flex-col items-center text-center space-y-3">
-                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white mb-2">
-                  <ShieldCheck className="w-6 h-6" />
+            <CardContent className="space-y-3">
+              {/* Midtrans */}
+              <button
+                type="button"
+                onClick={() => setPaymentMethod("midtrans")}
+                className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
+                  paymentMethod === "midtrans"
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/40"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <CreditCard className={`w-5 h-5 mt-0.5 ${paymentMethod === "midtrans" ? "text-primary" : "text-muted-foreground"}`} />
+                  <div>
+                    <p className="font-semibold text-sm">Transfer / Virtual Account / e-Wallet</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      BCA, BNI, BRI, Mandiri, GoPay, ShopeePay, dan 20+ metode pembayaran lainnya via Midtrans
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {["BCA VA", "Mandiri", "GoPay", "ShopeePay", "QRIS"].map(m => (
+                        <span key={m} className="text-[10px] bg-muted px-2 py-0.5 rounded font-medium">{m}</span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-bold text-lg">Rekening Bersama (Escrow)</h3>
-                <p className="text-sm text-muted-foreground">
-                  Pembayaran ditahan aman oleh platform. Dana hanya dikirim ke penjual setelah Anda mengkonfirmasi penerimaan barang.
-                </p>
+              </button>
+
+              {/* Escrow only */}
+              <button
+                type="button"
+                onClick={() => setPaymentMethod("escrow")}
+                className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
+                  paymentMethod === "escrow"
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/40"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <Building2 className={`w-5 h-5 mt-0.5 ${paymentMethod === "escrow" ? "text-primary" : "text-muted-foreground"}`} />
+                  <div>
+                    <p className="font-semibold text-sm">Transfer Manual + Rekening Bersama</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Dana ditahan aman di escrow. Dikirim ke penjual setelah barang diterima.
+                    </p>
+                  </div>
+                </div>
+              </button>
+
+              <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3 mt-2">
+                <ShieldCheck className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                <p className="text-xs text-amber-800">Semua transaksi dilindungi sistem <strong>Rekening Bersama (Escrow)</strong> jualdanbeli</p>
               </div>
             </CardContent>
           </Card>
@@ -228,10 +344,15 @@ export default function Checkout() {
               <Button
                 className="w-full font-bold text-base py-6 mt-4"
                 onClick={handleCheckout}
-                disabled={createOrder.isPending}
+                disabled={isLoading}
               >
-                {createOrder.isPending ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <ShieldCheck className="w-5 h-5 mr-2" />}
-                Bayar Sekarang
+                {isLoading
+                  ? <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  : paymentMethod === "midtrans"
+                    ? <CreditCard className="w-5 h-5 mr-2" />
+                    : <ShieldCheck className="w-5 h-5 mr-2" />
+                }
+                {paymentMethod === "midtrans" ? "Bayar via Midtrans" : "Bayar dengan Escrow"}
               </Button>
 
               <p className="text-center text-xs text-muted-foreground mt-3">

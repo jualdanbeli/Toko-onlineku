@@ -38,6 +38,8 @@ tags:
     description: Admin panel operations
   - name: dashboard
     description: Dashboard summaries and analytics
+  - name: storage
+    description: File upload and object storage
 
 paths:
   /healthz:
@@ -788,6 +790,137 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TrackingInfo"
+
+  /shipping/cities:
+    get:
+      operationId: getShippingCities
+      tags: [shipping]
+      summary: Get list of cities (RajaOngkir)
+      parameters:
+        - name: province
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: City list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    city_id: { type: string }
+                    city_name: { type: string }
+                    province: { type: string }
+
+  /shipping/provinces:
+    get:
+      operationId: getShippingProvinces
+      tags: [shipping]
+      summary: Get list of provinces (RajaOngkir)
+      responses:
+        "200":
+          description: Province list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    province_id: { type: string }
+                    province: { type: string }
+
+  # ─── STORAGE ────────────────────────────────────────────────────
+  /storage/uploads/request-url:
+    post:
+      operationId: requestUploadUrl
+      tags: [storage]
+      summary: Request presigned URL for direct file upload to GCS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestUploadUrlBody"
+      responses:
+        "200":
+          description: Presigned upload URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestUploadUrlResponse"
+
+  /storage/objects/{objectPath}:
+    get:
+      operationId: getStorageObject
+      tags: [storage]
+      summary: Serve stored object
+      parameters:
+        - name: objectPath
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File content
+
+  # ─── MIDTRANS ───────────────────────────────────────────────────
+  /payments/midtrans/token:
+    post:
+      operationId: getMidtransToken
+      tags: [payments]
+      summary: Get Midtrans Snap token for an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderId: { type: integer }
+              required: [orderId]
+      responses:
+        "200":
+          description: Snap token and redirect URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  redirectUrl: { type: string }
+                  clientKey: { type: string }
+                  isProduction: { type: boolean }
+
+  /payments/midtrans/webhook:
+    post:
+      operationId: midtransWebhook
+      tags: [payments]
+      summary: Midtrans payment notification webhook
+      responses:
+        "200":
+          description: OK
+
+  /payments/midtrans/config:
+    get:
+      operationId: getMidtransConfig
+      tags: [payments]
+      summary: Get Midtrans client-side configuration
+      responses:
+        "200":
+          description: Client config
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  clientKey: { type: string }
+                  isProduction: { type: boolean }
+                  enabled: { type: boolean }
 
   # ─── MESSAGES ───────────────────────────────────────────────────
   /messages/conversations:
@@ -2174,3 +2307,29 @@ components:
           type: number
         label:
           type: string
+
+    # ─── STORAGE ───────────────────────────────────────────────────
+    RequestUploadUrlBody:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name:
+          type: string
+          description: Original filename
+        size:
+          type: integer
+          description: File size in bytes
+        contentType:
+          type: string
+          description: MIME type (e.g. image/jpeg)
+
+    RequestUploadUrlResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL:
+          type: string
+          description: Presigned URL to PUT the file directly to GCS
+        objectPath:
+          type: string
+          description: Normalized object path for serving (e.g. /objects/uploads/uuid)

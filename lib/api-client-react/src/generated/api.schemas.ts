@@ -709,6 +709,22 @@ export interface ChartPoint {
   label?: string;
 }
 
+export interface RequestUploadUrlBody {
+  /** Original filename */
+  name: string;
+  /** File size in bytes */
+  size: number;
+  /** MIME type (e.g. image/jpeg) */
+  contentType: string;
+}
+
+export interface RequestUploadUrlResponse {
+  /** Presigned URL to PUT the file directly to GCS */
+  uploadURL: string;
+  /** Normalized object path for serving (e.g. /objects/uploads/uuid) */
+  objectPath: string;
+}
+
 export type GetProductsParams = {
 q?: string;
 categoryId?: number;
@@ -751,6 +767,38 @@ export const GetOrdersRole = {
   buyer: 'buyer',
   seller: 'seller',
 } as const;
+
+export type GetShippingCitiesParams = {
+province?: string;
+};
+
+export type GetShippingCities200Item = {
+  city_id?: string;
+  city_name?: string;
+  province?: string;
+};
+
+export type GetShippingProvinces200Item = {
+  province_id?: string;
+  province?: string;
+};
+
+export type GetMidtransTokenBody = {
+  orderId: number;
+};
+
+export type GetMidtransToken200 = {
+  token?: string;
+  redirectUrl?: string;
+  clientKey?: string;
+  isProduction?: boolean;
+};
+
+export type GetMidtransConfig200 = {
+  clientKey?: string;
+  isProduction?: boolean;
+  enabled?: boolean;
+};
 
 export type GetReportsParams = {
 status?: GetReportsStatus;

@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db, usersTable, walletsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { hashPassword, generateToken, requireAuth } from "../lib/auth";
+import { sendWelcomeEmail } from "../lib/email";
 
 const router: IRouter = Router();
 
@@ -27,6 +28,9 @@ router.post("/auth/register", async (req, res): Promise<void> => {
 
   const token = generateToken(user.id);
   const { passwordHash: _, ...safeUser } = user;
+
+  sendWelcomeEmail(user.email, user.name).catch(() => {});
+
   res.status(201).json({ user: safeUser, token });
 });
 

@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db, ordersTable, orderItemsTable, productsTable, usersTable, disputesTable, walletsTable, transactionsTable, notificationsTable } from "@workspace/db";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { requireAuth } from "../lib/auth";
+import { sendOrderCreatedEmail, sendOrderStatusEmail } from "../lib/email";
 
 const PLATFORM_COMMISSION_RATE = 0.02;
 
@@ -108,6 +109,20 @@ router.post("/orders", requireAuth, async (req, res): Promise<void> => {
     metadata: { orderId: order.id },
   });
 
+  // Send email to buyer
+  const [buyer] = await db.select().from(usersTable).where(eq(usersTable.id, req.user!.id));
+  const [seller] = await db.select().from(usersTable).where(eq(usersTable.id, sellerId));
+  if (buyer && seller) {
+    sendOrderCreatedEmail(buyer.email, {
+      orderId: order.id,
+      buyerName: buyer.name,
+      productName: orderItems[0]?.productName ?? "Produk",
+      quantity: orderItems[0]?.quantity ?? 1,
+      totalAmount: totalAmount,
+      sellerName: seller.name,
+    }).catch(() => {});
+  }
+
   res.status(201).json(await enrichOrder(order));
 });
 
@@ -141,6 +156,18 @@ router.patch("/orders/:orderId/status", requireAuth, async (req, res): Promise<v
     body: `Pesanan #${orderId} sekarang berstatus: ${status}`,
     metadata: { orderId },
   });
+
+  // Send email to buyer
+  const [buyerUser] = await db.select().from(usersTable).where(eq(usersTable.id, order.buyerId));
+  if (buyerUser) {
+    sendOrderStatusEmail(buyerUser.email, {
+      orderId,
+      recipientName: buyerUser.name,
+      status,
+      trackingNumber,
+      courierName: order.courierId ? String(order.courierId) : undefined,
+    }).catch(() => {});
+  }
 
   res.json(await enrichOrder(updated));
 });

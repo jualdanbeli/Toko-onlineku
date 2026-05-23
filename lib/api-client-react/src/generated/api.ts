@@ -43,10 +43,16 @@ import type {
   DisputeResolution,
   ErrorResponse,
   EscrowAccount,
+  GetMidtransConfig200,
+  GetMidtransToken200,
+  GetMidtransTokenBody,
   GetOrdersParams,
   GetProductsParams,
   GetReportsParams,
   GetSalesChartParams,
+  GetShippingCities200Item,
+  GetShippingCitiesParams,
+  GetShippingProvinces200Item,
   HealthStatus,
   LoginInput,
   Message,
@@ -64,6 +70,8 @@ import type {
   Report,
   ReportInput,
   ReportResolution,
+  RequestUploadUrlBody,
+  RequestUploadUrlResponse,
   Review,
   ReviewInput,
   ShippingCalculateInput,
@@ -2758,6 +2766,533 @@ export function useTrackShipment<TData = Awaited<ReturnType<typeof trackShipment
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getTrackShipmentQueryOptions(trackingNumber,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetShippingCitiesUrl = (params?: GetShippingCitiesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/shipping/cities?${stringifiedParams}` : `/api/shipping/cities`
+}
+
+/**
+ * @summary Get list of cities (RajaOngkir)
+ */
+export const getShippingCities = async (params?: GetShippingCitiesParams, options?: RequestInit): Promise<GetShippingCities200Item[]> => {
+
+  return customFetch<GetShippingCities200Item[]>(getGetShippingCitiesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetShippingCitiesQueryKey = (params?: GetShippingCitiesParams,) => {
+    return [
+    `/api/shipping/cities`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetShippingCitiesQueryOptions = <TData = Awaited<ReturnType<typeof getShippingCities>>, TError = ErrorType<unknown>>(params?: GetShippingCitiesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getShippingCities>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetShippingCitiesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getShippingCities>>> = ({ signal }) => getShippingCities(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getShippingCities>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetShippingCitiesQueryResult = NonNullable<Awaited<ReturnType<typeof getShippingCities>>>
+export type GetShippingCitiesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get list of cities (RajaOngkir)
+ */
+
+export function useGetShippingCities<TData = Awaited<ReturnType<typeof getShippingCities>>, TError = ErrorType<unknown>>(
+ params?: GetShippingCitiesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getShippingCities>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetShippingCitiesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetShippingProvincesUrl = () => {
+
+
+
+
+  return `/api/shipping/provinces`
+}
+
+/**
+ * @summary Get list of provinces (RajaOngkir)
+ */
+export const getShippingProvinces = async ( options?: RequestInit): Promise<GetShippingProvinces200Item[]> => {
+
+  return customFetch<GetShippingProvinces200Item[]>(getGetShippingProvincesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetShippingProvincesQueryKey = () => {
+    return [
+    `/api/shipping/provinces`
+    ] as const;
+    }
+
+
+export const getGetShippingProvincesQueryOptions = <TData = Awaited<ReturnType<typeof getShippingProvinces>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getShippingProvinces>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetShippingProvincesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getShippingProvinces>>> = ({ signal }) => getShippingProvinces({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getShippingProvinces>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetShippingProvincesQueryResult = NonNullable<Awaited<ReturnType<typeof getShippingProvinces>>>
+export type GetShippingProvincesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get list of provinces (RajaOngkir)
+ */
+
+export function useGetShippingProvinces<TData = Awaited<ReturnType<typeof getShippingProvinces>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getShippingProvinces>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetShippingProvincesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getRequestUploadUrlUrl = () => {
+
+
+
+
+  return `/api/storage/uploads/request-url`
+}
+
+/**
+ * @summary Request presigned URL for direct file upload to GCS
+ */
+export const requestUploadUrl = async (requestUploadUrlBody: RequestUploadUrlBody, options?: RequestInit): Promise<RequestUploadUrlResponse> => {
+
+  return customFetch<RequestUploadUrlResponse>(getRequestUploadUrlUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      requestUploadUrlBody,)
+  }
+);}
+
+
+
+
+export const getRequestUploadUrlMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestUploadUrl>>, TError,{data: BodyType<RequestUploadUrlBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestUploadUrl>>, TError,{data: BodyType<RequestUploadUrlBody>}, TContext> => {
+
+const mutationKey = ['requestUploadUrl'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestUploadUrl>>, {data: BodyType<RequestUploadUrlBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  requestUploadUrl(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestUploadUrlMutationResult = NonNullable<Awaited<ReturnType<typeof requestUploadUrl>>>
+    export type RequestUploadUrlMutationBody = BodyType<RequestUploadUrlBody>
+    export type RequestUploadUrlMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Request presigned URL for direct file upload to GCS
+ */
+export const useRequestUploadUrl = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestUploadUrl>>, TError,{data: BodyType<RequestUploadUrlBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestUploadUrl>>,
+        TError,
+        {data: BodyType<RequestUploadUrlBody>},
+        TContext
+      > => {
+      return useMutation(getRequestUploadUrlMutationOptions(options));
+    }
+
+export const getGetStorageObjectUrl = (objectPath: string,) => {
+
+
+
+
+  return `/api/storage/objects/${objectPath}`
+}
+
+/**
+ * @summary Serve stored object
+ */
+export const getStorageObject = async (objectPath: string, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getGetStorageObjectUrl(objectPath),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetStorageObjectQueryKey = (objectPath: string,) => {
+    return [
+    `/api/storage/objects/${objectPath}`
+    ] as const;
+    }
+
+
+export const getGetStorageObjectQueryOptions = <TData = Awaited<ReturnType<typeof getStorageObject>>, TError = ErrorType<unknown>>(objectPath: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStorageObject>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetStorageObjectQueryKey(objectPath);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getStorageObject>>> = ({ signal }) => getStorageObject(objectPath, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(objectPath), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getStorageObject>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetStorageObjectQueryResult = NonNullable<Awaited<ReturnType<typeof getStorageObject>>>
+export type GetStorageObjectQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Serve stored object
+ */
+
+export function useGetStorageObject<TData = Awaited<ReturnType<typeof getStorageObject>>, TError = ErrorType<unknown>>(
+ objectPath: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getStorageObject>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetStorageObjectQueryOptions(objectPath,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetMidtransTokenUrl = () => {
+
+
+
+
+  return `/api/payments/midtrans/token`
+}
+
+/**
+ * @summary Get Midtrans Snap token for an order
+ */
+export const getMidtransToken = async (getMidtransTokenBody: GetMidtransTokenBody, options?: RequestInit): Promise<GetMidtransToken200> => {
+
+  return customFetch<GetMidtransToken200>(getGetMidtransTokenUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      getMidtransTokenBody,)
+  }
+);}
+
+
+
+
+export const getGetMidtransTokenMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getMidtransToken>>, TError,{data: BodyType<GetMidtransTokenBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof getMidtransToken>>, TError,{data: BodyType<GetMidtransTokenBody>}, TContext> => {
+
+const mutationKey = ['getMidtransToken'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getMidtransToken>>, {data: BodyType<GetMidtransTokenBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  getMidtransToken(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GetMidtransTokenMutationResult = NonNullable<Awaited<ReturnType<typeof getMidtransToken>>>
+    export type GetMidtransTokenMutationBody = BodyType<GetMidtransTokenBody>
+    export type GetMidtransTokenMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Get Midtrans Snap token for an order
+ */
+export const useGetMidtransToken = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getMidtransToken>>, TError,{data: BodyType<GetMidtransTokenBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof getMidtransToken>>,
+        TError,
+        {data: BodyType<GetMidtransTokenBody>},
+        TContext
+      > => {
+      return useMutation(getGetMidtransTokenMutationOptions(options));
+    }
+
+export const getMidtransWebhookUrl = () => {
+
+
+
+
+  return `/api/payments/midtrans/webhook`
+}
+
+/**
+ * @summary Midtrans payment notification webhook
+ */
+export const midtransWebhook = async ( options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getMidtransWebhookUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getMidtransWebhookMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof midtransWebhook>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof midtransWebhook>>, TError,void, TContext> => {
+
+const mutationKey = ['midtransWebhook'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof midtransWebhook>>, void> = () => {
+
+
+          return  midtransWebhook(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MidtransWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof midtransWebhook>>>
+
+    export type MidtransWebhookMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Midtrans payment notification webhook
+ */
+export const useMidtransWebhook = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof midtransWebhook>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof midtransWebhook>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getMidtransWebhookMutationOptions(options));
+    }
+
+export const getGetMidtransConfigUrl = () => {
+
+
+
+
+  return `/api/payments/midtrans/config`
+}
+
+/**
+ * @summary Get Midtrans client-side configuration
+ */
+export const getMidtransConfig = async ( options?: RequestInit): Promise<GetMidtransConfig200> => {
+
+  return customFetch<GetMidtransConfig200>(getGetMidtransConfigUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMidtransConfigQueryKey = () => {
+    return [
+    `/api/payments/midtrans/config`
+    ] as const;
+    }
+
+
+export const getGetMidtransConfigQueryOptions = <TData = Awaited<ReturnType<typeof getMidtransConfig>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMidtransConfig>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMidtransConfigQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMidtransConfig>>> = ({ signal }) => getMidtransConfig({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMidtransConfig>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMidtransConfigQueryResult = NonNullable<Awaited<ReturnType<typeof getMidtransConfig>>>
+export type GetMidtransConfigQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get Midtrans client-side configuration
+ */
+
+export function useGetMidtransConfig<TData = Awaited<ReturnType<typeof getMidtransConfig>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMidtransConfig>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMidtransConfigQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
