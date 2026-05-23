@@ -41,6 +41,9 @@ import Support from "@/pages/support";
 import AdminSupport from "@/pages/admin/support";
 import Wishlist from "@/pages/wishlist";
 import AdminVouchers from "@/pages/admin/vouchers";
+import LivePage from "@/pages/live/index";
+import WatchLive from "@/pages/live/watch";
+import SellerLive from "@/pages/seller/live";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +96,9 @@ function Router() {
       <Route path="/admin/support" component={AdminSupport} />
       <Route path="/wishlist" component={Wishlist} />
       <Route path="/admin/vouchers" component={AdminVouchers} />
+      <Route path="/live" component={LivePage} />
+      <Route path="/live/:id" component={WatchLive} />
+      <Route path="/seller/live" component={SellerLive} />
 
       <Route component={NotFound} />
     </Switch>

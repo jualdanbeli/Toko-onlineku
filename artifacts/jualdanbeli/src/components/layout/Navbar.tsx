@@ -12,7 +12,8 @@ import {
   LogOut,
   ShieldCheck,
   HeadphonesIcon,
-  Heart
+  Heart,
+  Radio
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -67,6 +68,13 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4">
+          <Link href="/live" className="hidden md:flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-600 transition-colors">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+            </span>
+            LIVE
+          </Link>
           {isAuthenticated && user?.role === "buyer" && (
             <Link href="/cart" className="relative p-2 text-foreground hover:bg-muted rounded-full transition-colors">
               <ShoppingCart className="w-5 h-5" />
@@ -115,6 +123,11 @@ export function Navbar() {
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/seller/orders" className="cursor-pointer">Shop Orders</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/seller/live" className="cursor-pointer">
+                        <Radio className="w-4 h-4 mr-2 text-red-500" />Studio Live
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/wallet" className="cursor-pointer">Wallet</Link>

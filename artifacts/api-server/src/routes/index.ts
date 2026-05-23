@@ -15,6 +15,7 @@ import dashboardRouter from "./dashboard";
 import supportRouter from "./support";
 import wishlistRouter from "./wishlist";
 import vouchersRouter from "./vouchers";
+import liveRouter from "./live";
 
 const router: IRouter = Router();
 
@@ -34,5 +35,6 @@ router.use(dashboardRouter);
 router.use(supportRouter);
 router.use(wishlistRouter);
 router.use(vouchersRouter);
+router.use(liveRouter);
 
 export default router;
