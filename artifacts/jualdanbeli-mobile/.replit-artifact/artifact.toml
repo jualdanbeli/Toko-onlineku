@@ -1,0 +1,26 @@
+kind = "mobile"
+previewPath = "/mobile/"
+title = "jualdanbeli Mobile"
+version = "1.0.0"
+id = "artifacts/jualdanbeli-mobile"
+router = "expo-domain"
+
+[[integratedSkills]]
+name = "expo"
+version = "1.0.0"
+
+[[services]]
+name = "expo"
+paths = [ "/mobile/" ]
+localPort = 22414
+
+[services.development]
+run = "pnpm --filter @workspace/jualdanbeli-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/jualdanbeli-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/jualdanbeli-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "22414"
+BASE_PATH = "/mobile/"

@@ -1,0 +1,20 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "H54ZSwwvEjYFsx7HU4v0K"
+uri = "file://artifacts/jualdanbeli-mobile/assets/images/icon.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "fnpNQ12ex_yni8j6SesnX"
+uri = "file://artifacts/jualdanbeli-mobile/assets/images/splash-icon.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "4AdeedfUQKeGxJ-tnKpiW"
+uri = "file://artifacts/jualdanbeli-mobile/assets/images/hero-banner.png"
+type = "image"
+title = "generated_image"
