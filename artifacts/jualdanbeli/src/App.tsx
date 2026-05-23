@@ -39,6 +39,8 @@ import About from "@/pages/about";
 import SellerKYC from "@/pages/seller-kyc";
 import Support from "@/pages/support";
 import AdminSupport from "@/pages/admin/support";
+import AdminAnalytics from "@/pages/admin/analytics";
+import AdminPlatformSettings from "@/pages/admin/settings";
 import Wishlist from "@/pages/wishlist";
 import AdminVouchers from "@/pages/admin/vouchers";
 import LivePage from "@/pages/live/index";
@@ -86,6 +88,8 @@ function Router() {
       <Route path="/admin/disputes" component={AdminDisputes} />
       <Route path="/admin/reports" component={AdminReports} />
       <Route path="/admin/withdrawals" component={AdminWithdrawals} />
+      <Route path="/admin/analytics" component={AdminAnalytics} />
+      <Route path="/admin/platform-settings" component={AdminPlatformSettings} />
 
       {/* Legal & Info Pages */}
       <Route path="/terms" component={Terms} />

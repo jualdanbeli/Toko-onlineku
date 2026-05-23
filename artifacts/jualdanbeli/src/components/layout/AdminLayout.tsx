@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, Users, Package, ShoppingBag, AlertTriangle, ArrowLeft, LogOut, FileWarning, WalletCards, HeadphonesIcon, Tag } from "lucide-react";
+import { LayoutDashboard, Users, Package, ShoppingBag, AlertTriangle, ArrowLeft, LogOut, FileWarning, WalletCards, HeadphonesIcon, Tag, BarChart2, Settings } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useLogout } from "@workspace/api-client-react";
 
@@ -11,14 +11,16 @@ export function AdminLayout({ children }: { children: ReactNode }) {
 
   const navItems = [
     { icon: LayoutDashboard, label: "Overview", href: "/admin" },
-    { icon: Users, label: "Users", href: "/admin/users" },
-    { icon: Package, label: "Products", href: "/admin/products" },
-    { icon: ShoppingBag, label: "Orders", href: "/admin/orders" },
-    { icon: AlertTriangle, label: "Disputes", href: "/admin/disputes" },
-    { icon: FileWarning, label: "Reports", href: "/admin/reports" },
-    { icon: WalletCards, label: "Withdrawals", href: "/admin/withdrawals" },
+    { icon: BarChart2, label: "Analytics", href: "/admin/analytics" },
+    { icon: Users, label: "Pengguna", href: "/admin/users" },
+    { icon: Package, label: "Produk", href: "/admin/products" },
+    { icon: ShoppingBag, label: "Pesanan", href: "/admin/orders" },
+    { icon: AlertTriangle, label: "Sengketa", href: "/admin/disputes" },
+    { icon: FileWarning, label: "Laporan", href: "/admin/reports" },
+    { icon: WalletCards, label: "Penarikan Dana", href: "/admin/withdrawals" },
     { icon: Tag, label: "Voucher / Kupon", href: "/admin/vouchers" },
     { icon: HeadphonesIcon, label: "CS / Pengaduan", href: "/admin/support" },
+    { icon: Settings, label: "Pengaturan Platform", href: "/admin/platform-settings" },
   ];
 
   return (
