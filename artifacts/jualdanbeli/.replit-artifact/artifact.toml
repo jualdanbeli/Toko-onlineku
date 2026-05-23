@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "jualdanbeli Marketplace"
+version = "1.0.0"
+id = "artifacts/jualdanbeli"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22850
+
+[services.development]
+run = "pnpm --filter @workspace/jualdanbeli run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/jualdanbeli", "run", "build" ]
+publicDir = "artifacts/jualdanbeli/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22850"
+BASE_PATH = "/"
