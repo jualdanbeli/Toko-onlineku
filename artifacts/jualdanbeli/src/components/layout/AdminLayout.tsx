@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, Users, Package, ShoppingBag, AlertTriangle, ArrowLeft, LogOut, FileWarning, WalletCards } from "lucide-react";
+import { LayoutDashboard, Users, Package, ShoppingBag, AlertTriangle, ArrowLeft, LogOut, FileWarning, WalletCards, HeadphonesIcon } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useLogout } from "@workspace/api-client-react";
 
@@ -17,6 +17,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     { icon: AlertTriangle, label: "Disputes", href: "/admin/disputes" },
     { icon: FileWarning, label: "Reports", href: "/admin/reports" },
     { icon: WalletCards, label: "Withdrawals", href: "/admin/withdrawals" },
+    { icon: HeadphonesIcon, label: "CS / Pengaduan", href: "/admin/support" },
   ];
 
   return (

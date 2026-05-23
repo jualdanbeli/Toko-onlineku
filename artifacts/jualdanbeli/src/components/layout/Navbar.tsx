@@ -10,7 +10,8 @@ import {
   User, 
   Store,
   LogOut,
-  ShieldCheck
+  ShieldCheck,
+  HeadphonesIcon
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -123,6 +124,22 @@ export function Navbar() {
                 {user?.role === "admin" && (
                   <DropdownMenuItem asChild>
                     <Link href="/admin" className="cursor-pointer">Admin Dashboard</Link>
+                  </DropdownMenuItem>
+                )}
+
+                {user?.role === "admin" && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin/support" className="cursor-pointer">
+                      <HeadphonesIcon className="w-4 h-4 mr-2" />CS / Pengaduan
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+
+                {(user?.role === "buyer" || user?.role === "seller") && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/support" className="cursor-pointer">
+                      <HeadphonesIcon className="w-4 h-4 mr-2" />Bantuan CS
+                    </Link>
                   </DropdownMenuItem>
                 )}
 

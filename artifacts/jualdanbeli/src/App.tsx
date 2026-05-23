@@ -37,6 +37,8 @@ import Terms from "@/pages/terms";
 import Privacy from "@/pages/privacy";
 import About from "@/pages/about";
 import SellerKYC from "@/pages/seller-kyc";
+import Support from "@/pages/support";
+import AdminSupport from "@/pages/admin/support";
 
 const queryClient = new QueryClient();
 
@@ -85,6 +87,8 @@ function Router() {
       <Route path="/privacy" component={Privacy} />
       <Route path="/about" component={About} />
       <Route path="/seller/register" component={SellerKYC} />
+      <Route path="/support" component={Support} />
+      <Route path="/admin/support" component={AdminSupport} />
 
       <Route component={NotFound} />
     </Switch>
