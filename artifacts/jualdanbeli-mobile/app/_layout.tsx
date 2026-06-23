@@ -19,7 +19,8 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 
 // Set API base URL — Expo runs outside the shared proxy, needs absolute URL
-setBaseUrl(`https://${process.env.EXPO_PUBLIC_DOMAIN}`);
+const apiDomain = process.env.EXPO_PUBLIC_DOMAIN || "jual-beli-aman.replit.app";
+setBaseUrl(`https://${apiDomain}`);
 
 SplashScreen.preventAutoHideAsync();
 
