@@ -45,3 +45,10 @@ externalPort = 3000
 
 [nix]
 channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+APP_URL = "https://jual-beli-aman.replit.app"
+MIDTRANS_IS_PRODUCTION = "false"
+FROM_EMAIL = "noreply@jualdanbeli.com"
