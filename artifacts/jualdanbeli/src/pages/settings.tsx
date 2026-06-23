@@ -194,7 +194,7 @@ export default function Settings() {
 
           {/* Ganti Password */}
           <form onSubmit={handleChangePassword}>
-            <Card className="border-orange-200">
+            <Card className="border-blue-200">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <KeyRound className="w-5 h-5 text-primary" />

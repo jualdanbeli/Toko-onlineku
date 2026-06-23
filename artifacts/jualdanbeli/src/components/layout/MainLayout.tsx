@@ -21,7 +21,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               <div className="bg-primary text-primary-foreground p-1 rounded-lg">
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <span className="font-bold text-lg text-primary">jualdanbeli</span>
+              <span className="font-bold text-lg text-gray-900">jualdanbeli</span>
             </div>
             <p className="text-sm text-muted-foreground mb-3">
               Marketplace terpercaya Indonesia. Transaksi aman, cepat, dan terlindungi sistem Rekening Bersama.
@@ -61,7 +61,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <span className="text-[10px] font-medium">Rekening Bersama</span>
               </div>
               <div className="flex flex-col items-center p-3 bg-muted rounded-lg text-center">
-                <Truck className="w-5 h-5 text-orange-500 mb-1" />
+                <Truck className="w-5 h-5 text-primary mb-1" />
                 <span className="text-[10px] font-medium">Multi Kurir</span>
               </div>
               <div className="flex flex-col items-center p-3 bg-muted rounded-lg text-center">

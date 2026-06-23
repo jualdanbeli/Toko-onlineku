@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <MainLayout>
       {/* Hero Section */}
-      <section className="relative rounded-2xl overflow-hidden mb-12 bg-gradient-to-r from-primary to-orange-400 p-8 md:p-12 text-primary-foreground shadow-lg">
+      <section className="relative rounded-2xl overflow-hidden mb-12 bg-gradient-to-r from-primary to-blue-400 p-8 md:p-12 text-primary-foreground shadow-lg">
         <div className="relative z-10 max-w-2xl">
           <Badge variant="secondary" className="mb-6 bg-white/20 text-white hover:bg-white/30 border-none px-3 py-1 text-xs">
             Dipercaya 2 Juta+ Pengguna
@@ -51,21 +51,21 @@ export default function Home() {
 
       {/* Keunggulan Platform */}
       <section className="mb-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="flex items-start gap-3 bg-orange-50 border border-orange-100 rounded-xl p-4">
+        <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-xl p-4">
           <ShieldCheck className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
           <div>
             <p className="font-semibold text-sm">Rekening Bersama</p>
             <p className="text-xs text-muted-foreground">Dana ditahan hingga barang diterima pembeli</p>
           </div>
         </div>
-        <div className="flex items-start gap-3 bg-orange-50 border border-orange-100 rounded-xl p-4">
+        <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-xl p-4">
           <Truck className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
           <div>
             <p className="font-semibold text-sm">Pengiriman ke Seluruh Indonesia</p>
             <p className="text-xs text-muted-foreground">JNE, J&T, SiCepat, Gojek, dan lebih banyak lagi</p>
           </div>
         </div>
-        <div className="flex items-start gap-3 bg-orange-50 border border-orange-100 rounded-xl p-4">
+        <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-xl p-4">
           <Star className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
           <div>
             <p className="font-semibold text-sm">Penjual Terverifikasi</p>

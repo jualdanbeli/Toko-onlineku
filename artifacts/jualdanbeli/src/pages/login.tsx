@@ -136,9 +136,9 @@ export default function Login() {
               </Form>
 
               {/* Quick fill admin */}
-              <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-xl">
-                <p className="text-xs font-semibold text-orange-800 mb-2">Masuk sebagai Operator/Admin:</p>
-                <div className="text-xs text-orange-700 space-y-0.5 mb-2">
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
+                <p className="text-xs font-semibold text-blue-800 mb-2">Masuk sebagai Operator/Admin:</p>
+                <div className="text-xs text-blue-700 space-y-0.5 mb-2">
                   <div>Email: <span className="font-mono font-semibold">radjapamungkas007@gmail.com</span></div>
                   <div>Password: <span className="font-mono font-semibold">Admin123!</span></div>
                 </div>
@@ -146,7 +146,7 @@ export default function Login() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="w-full border-orange-300 text-orange-700 hover:bg-orange-100 text-xs h-8"
+                  className="w-full border-blue-300 text-blue-700 hover:bg-blue-100 text-xs h-8"
                   onClick={fillAdmin}
                 >
                   Isi Otomatis & Masuk sebagai Admin
@@ -173,7 +173,7 @@ export default function Login() {
 
       {/* Branding side */}
       <div className="hidden md:flex flex-1 bg-primary items-center justify-center p-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary to-orange-600 opacity-90 z-0" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary to-blue-600 opacity-90 z-0" />
         <div className="relative z-10 text-primary-foreground max-w-lg">
           <h2 className="text-4xl font-extrabold mb-6">Jual & Beli dengan Aman.</h2>
           <p className="text-lg text-primary-foreground/90 mb-8 leading-relaxed">

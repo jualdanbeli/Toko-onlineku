@@ -33,12 +33,12 @@ function baseTemplate(content: string) {
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FAF9F7;margin:0;padding:0}
     .wrap{max-width:560px;margin:40px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-    .header{background:#F47820;padding:24px 32px}
+    .header{background:#2563EB;padding:24px 32px}
     .header h1{color:#fff;margin:0;font-size:22px;font-weight:700}
     .header p{color:rgba(255,255,255,.8);margin:4px 0 0;font-size:13px}
     .body{padding:32px}
     .badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600}
-    .btn{display:inline-block;background:#F47820;color:#fff!important;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:16px}
+    .btn{display:inline-block;background:#2563EB;color:#fff!important;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:16px}
     .footer{background:#F5F5F5;padding:16px 32px;font-size:12px;color:#888;text-align:center}
     table{width:100%;border-collapse:collapse}td{padding:8px 0;border-bottom:1px solid #F0F0F0;font-size:14px}
     .label{color:#888;width:40%}.value{font-weight:500;color:#1A1A1A}
@@ -66,7 +66,7 @@ export async function sendOrderCreatedEmail(to: string, data: {
       <tr><td class="label">Produk</td><td class="value">${data.productName} × ${data.quantity}</td></tr>
       <tr><td class="label">Penjual</td><td class="value">${data.sellerName}</td></tr>
       <tr><td class="label">Total</td><td class="value">Rp ${data.totalAmount.toLocaleString("id-ID")}</td></tr>
-      <tr><td class="label">Status</td><td class="value"><span class="badge" style="background:#FFF3E0;color:#F47820">Menunggu Pembayaran</span></td></tr>
+      <tr><td class="label">Status</td><td class="value"><span class="badge" style="background:#EFF6FF;color:#2563EB">Menunggu Pembayaran</span></td></tr>
     </table>
     <p style="margin-top:16px">Dana kamu dilindungi sistem <strong>Rekening Bersama (Escrow)</strong> — uang aman sampai barang diterima.</p>
     <a href="${APP_URL}/orders/${data.orderId}" class="btn">Lihat Pesanan</a>
@@ -129,7 +129,7 @@ export async function sendPasswordResetEmail(to: string, data: { name: string; r
     <p>Klik tombol di bawah ini untuk membuat password baru. Link ini berlaku selama <strong>1 jam</strong>.</p>
     <a href="${data.resetLink}" class="btn">Reset Password Sekarang</a>
     <p style="margin-top:24px;font-size:12px;color:#999">Jika kamu tidak meminta reset password, abaikan email ini. Password kamu tidak akan berubah.</p>
-    <p style="font-size:12px;color:#999">Atau salin link ini ke browser:<br><span style="word-break:break-all;color:#F47820">${data.resetLink}</span></p>
+    <p style="font-size:12px;color:#999">Atau salin link ini ke browser:<br><span style="word-break:break-all;color:#2563EB">${data.resetLink}</span></p>
   `);
   await sendMail(to, "Reset Password — jualdanbeli", html);
 }

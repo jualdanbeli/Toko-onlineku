@@ -77,18 +77,18 @@ export default function PlatformSettingsPage() {
       </div>
 
       {/* Ringkasan potongan penjual */}
-      <div className="mb-6 p-4 rounded-xl bg-orange-50 border border-orange-200">
+      <div className="mb-6 p-4 rounded-xl bg-blue-50 border border-blue-200">
         <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-orange-600 mt-0.5 shrink-0" />
+          <Info className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
           <div>
-            <p className="font-semibold text-orange-800 text-sm">Ringkasan Potongan per Transaksi Penjual</p>
+            <p className="font-semibold text-blue-800 text-sm">Ringkasan Potongan per Transaksi Penjual</p>
             <div className="mt-2 grid grid-cols-3 gap-4 text-sm">
-              <div className="text-center bg-white rounded-lg p-3 border border-orange-100">
-                <p className="text-2xl font-bold text-orange-600">{form.commissionRate ?? 1}%</p>
+              <div className="text-center bg-white rounded-lg p-3 border border-blue-100">
+                <p className="text-2xl font-bold text-blue-600">{form.commissionRate ?? 1}%</p>
                 <p className="text-xs text-muted-foreground mt-1">Biaya Platform</p>
               </div>
-              <div className="text-center bg-white rounded-lg p-3 border border-orange-100">
-                <p className="text-2xl font-bold text-blue-600">{form.umkmTaxRate ?? 0.5}%</p>
+              <div className="text-center bg-white rounded-lg p-3 border border-blue-100">
+                <p className="text-2xl font-bold text-indigo-600">{form.umkmTaxRate ?? 0.5}%</p>
                 <p className="text-xs text-muted-foreground mt-1">Pajak UMKM (PPh Final)</p>
               </div>
               <div className="text-center bg-white rounded-lg p-3 border border-green-100">
@@ -96,7 +96,7 @@ export default function PlatformSettingsPage() {
                 <p className="text-xs text-muted-foreground mt-1">Diterima Penjual</p>
               </div>
             </div>
-            <p className="text-xs text-orange-700 mt-2">
+            <p className="text-xs text-blue-700 mt-2">
               Contoh: Penjualan Rp 100.000 → Biaya platform Rp {((form.commissionRate ?? 1) * 1000).toLocaleString("id-ID")} + Pajak UMKM Rp {((form.umkmTaxRate ?? 0.5) * 1000).toLocaleString("id-ID")} → Penjual menerima Rp {(sellerReceives * 1000).toLocaleString("id-ID")}
             </p>
           </div>

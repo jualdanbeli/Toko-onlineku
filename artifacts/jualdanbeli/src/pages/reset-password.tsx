@@ -165,7 +165,7 @@ export default function ResetPassword() {
 
       {/* Branding side */}
       <div className="hidden md:flex flex-1 bg-primary items-center justify-center p-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary to-orange-600 opacity-90 z-0" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary to-blue-600 opacity-90 z-0" />
         <div className="relative z-10 text-primary-foreground max-w-lg">
           <h2 className="text-4xl font-extrabold mb-6">Akun Anda Aman.</h2>
           <p className="text-lg text-primary-foreground/90 mb-8 leading-relaxed">

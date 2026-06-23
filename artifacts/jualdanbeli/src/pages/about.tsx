@@ -8,7 +8,7 @@ export default function About() {
   return (
     <MainLayout>
       {/* Hero */}
-      <section className="rounded-2xl bg-gradient-to-r from-primary to-orange-400 text-white p-10 mb-12 text-center">
+      <section className="rounded-2xl bg-gradient-to-r from-primary to-blue-400 text-white p-10 mb-12 text-center">
         <h1 className="text-4xl font-extrabold mb-4">Tentang jualdanbeli</h1>
         <p className="text-white/90 text-lg max-w-2xl mx-auto leading-relaxed">
           Platform marketplace terpercaya Indonesia yang menghubungkan jutaan pembeli dan penjual 

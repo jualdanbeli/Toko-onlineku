@@ -78,7 +78,7 @@ export default function AdminDashboard() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className="bg-orange-100 p-3 rounded-lg text-orange-600">
+                <div className="bg-blue-100 p-3 rounded-lg text-blue-600">
                   <Package className="w-5 h-5" />
                 </div>
               </div>

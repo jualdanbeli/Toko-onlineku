@@ -37,7 +37,7 @@ export default function Profile() {
   return (
     <MainLayout>
       <Card className="mb-8 overflow-hidden">
-        <div className="h-32 bg-gradient-to-r from-primary/80 to-orange-400"></div>
+        <div className="h-32 bg-gradient-to-r from-primary/80 to-blue-400"></div>
         <CardContent className="p-6 relative">
           <div className="flex flex-col md:flex-row gap-6 items-start md:items-end -mt-16 md:-mt-12 mb-6">
             <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">

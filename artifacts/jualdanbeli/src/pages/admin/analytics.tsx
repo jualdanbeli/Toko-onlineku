@@ -61,7 +61,7 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {[
           { icon: DollarSign, label: "Total Transaksi", value: formatIDR(summary?.totalRevenue ?? 0), color: "text-emerald-600", bg: "bg-emerald-100" },
-          { icon: Percent, label: `Komisi Platform (${summary?.commissionRate ?? 3}%)`, value: formatIDR(summary?.totalCommission ?? 0), color: "text-orange-600", bg: "bg-orange-100" },
+          { icon: Percent, label: `Komisi Platform (${summary?.commissionRate ?? 3}%)`, value: formatIDR(summary?.totalCommission ?? 0), color: "text-blue-600", bg: "bg-blue-100" },
           { icon: ShoppingBag, label: "Total Pesanan", value: `${summary?.totalOrders ?? 0} pesanan`, color: "text-blue-600", bg: "bg-blue-100" },
           { icon: Users, label: "Total Pengguna", value: `${summary?.totalUsers ?? 0} akun`, color: "text-purple-600", bg: "bg-purple-100" },
           { icon: Award, label: "Penjual Aktif", value: `${summary?.totalSellers ?? 0} toko`, color: "text-pink-600", bg: "bg-pink-100" },
@@ -150,7 +150,7 @@ export default function AnalyticsPage() {
                       </td>
                       <td className="text-right py-3">{s.orderCount}</td>
                       <td className="text-right py-3 font-medium">{formatIDR(s.totalSales)}</td>
-                      <td className="text-right py-3 text-orange-600 font-medium">{formatIDR(s.commission)}</td>
+                      <td className="text-right py-3 text-blue-600 font-medium">{formatIDR(s.commission)}</td>
                     </tr>
                   ))}
                 </tbody>

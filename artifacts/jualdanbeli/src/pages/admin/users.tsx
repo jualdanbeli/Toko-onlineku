@@ -93,7 +93,7 @@ function RoleBadge({ role }: { role: string }) {
   const map: Record<string, string> = {
     buyer: "bg-blue-100 text-blue-700",
     seller: "bg-purple-100 text-purple-700",
-    admin: "bg-orange-100 text-orange-700",
+    admin: "bg-blue-100 text-blue-700",
   };
   return <Badge variant="outline" className={`${map[role] || ""} capitalize text-xs`}>{role}</Badge>;
 }

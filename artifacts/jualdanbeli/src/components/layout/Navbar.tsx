@@ -51,7 +51,7 @@ export function Navbar() {
             <div className="bg-primary text-primary-foreground p-1.5 rounded-lg">
               <Store className="w-5 h-5" />
             </div>
-            <span className="text-xl font-bold text-primary tracking-tight hidden sm:inline-block">
+            <span className="text-xl font-bold text-gray-900 tracking-tight hidden sm:inline-block">
               jualdanbeli
             </span>
           </Link>
