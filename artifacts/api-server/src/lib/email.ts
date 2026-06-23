@@ -122,6 +122,18 @@ export async function sendWelcomeEmail(to: string, name: string) {
   await sendMail(to, "Selamat datang di jualdanbeli! 🎊", html);
 }
 
+export async function sendPasswordResetEmail(to: string, data: { name: string; resetLink: string }) {
+  const html = baseTemplate(`
+    <h2>Reset Password Akun 🔐</h2>
+    <p>Halo <strong>${data.name}</strong>, kami menerima permintaan reset password untuk akun kamu.</p>
+    <p>Klik tombol di bawah ini untuk membuat password baru. Link ini berlaku selama <strong>1 jam</strong>.</p>
+    <a href="${data.resetLink}" class="btn">Reset Password Sekarang</a>
+    <p style="margin-top:24px;font-size:12px;color:#999">Jika kamu tidak meminta reset password, abaikan email ini. Password kamu tidak akan berubah.</p>
+    <p style="font-size:12px;color:#999">Atau salin link ini ke browser:<br><span style="word-break:break-all;color:#F47820">${data.resetLink}</span></p>
+  `);
+  await sendMail(to, "Reset Password — jualdanbeli", html);
+}
+
 export async function sendPaymentSuccessEmail(to: string, data: {
   orderId: number;
   buyerName: string;

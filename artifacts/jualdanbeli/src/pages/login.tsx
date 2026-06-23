@@ -155,6 +155,11 @@ export default function Login() {
             </CardContent>
 
             <CardFooter className="flex flex-col gap-3 pt-0">
+              <div className="text-sm text-center">
+                <Link href="/forgot-password" className="text-muted-foreground hover:text-primary hover:underline transition-colors">
+                  Lupa password?
+                </Link>
+              </div>
               <div className="text-sm text-center text-muted-foreground">
                 Belum punya akun?{" "}
                 <Link href="/register" className="text-primary font-semibold hover:underline">

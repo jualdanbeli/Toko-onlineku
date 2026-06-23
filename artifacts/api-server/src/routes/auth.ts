@@ -1,8 +1,9 @@
 import { Router, type IRouter } from "express";
 import { db, usersTable, walletsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
+import crypto from "crypto";
 import { hashPassword, generateToken, requireAuth } from "../lib/auth";
-import { sendWelcomeEmail } from "../lib/email";
+import { sendWelcomeEmail, sendPasswordResetEmail } from "../lib/email";
 
 const router: IRouter = Router();
 
@@ -52,6 +53,48 @@ router.post("/auth/login", async (req, res): Promise<void> => {
   const token = generateToken(user.id);
   const { passwordHash: _, ...safeUser } = user;
   res.json({ user: safeUser, token });
+});
+
+router.post("/auth/forgot-password", async (req, res): Promise<void> => {
+  const { emailOrPhone } = req.body;
+  if (!emailOrPhone) {
+    res.status(400).json({ error: "Email atau nomor HP wajib diisi" }); return;
+  }
+  const trimmed = emailOrPhone.trim();
+  const [user] = await db.select().from(usersTable).where(
+    or(eq(usersTable.email, trimmed), eq(usersTable.phone, trimmed))
+  );
+  if (!user) {
+    res.json({ message: "Jika akun ditemukan, link reset akan dikirim ke email terdaftar." }); return;
+  }
+  const token = crypto.randomBytes(32).toString("hex");
+  const expiry = new Date(Date.now() + 60 * 60 * 1000);
+  await db.update(usersTable).set({ resetToken: token, resetTokenExpiry: expiry }).where(eq(usersTable.id, user.id));
+  const APP_URL = process.env.APP_URL ?? "https://jualdanbeli.replit.app";
+  const resetLink = `${APP_URL}/reset-password?token=${token}`;
+  sendPasswordResetEmail(user.email, { name: user.name, resetLink }).catch(() => {});
+  res.json({ message: "Jika akun ditemukan, link reset akan dikirim ke email terdaftar." });
+});
+
+router.post("/auth/reset-password", async (req, res): Promise<void> => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword) {
+    res.status(400).json({ error: "Token dan password baru wajib diisi" }); return;
+  }
+  if (newPassword.length < 8) {
+    res.status(400).json({ error: "Password minimal 8 karakter" }); return;
+  }
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.resetToken, token));
+  if (!user || !user.resetTokenExpiry || user.resetTokenExpiry < new Date()) {
+    res.status(400).json({ error: "Link reset tidak valid atau sudah kadaluarsa. Minta link baru." }); return;
+  }
+  await db.update(usersTable).set({
+    passwordHash: hashPassword(newPassword),
+    resetToken: null,
+    resetTokenExpiry: null,
+    updatedAt: new Date(),
+  }).where(eq(usersTable.id, user.id));
+  res.json({ message: "Password berhasil direset. Silakan login dengan password baru." });
 });
 
 router.post("/auth/logout", async (_req, res): Promise<void> => {
