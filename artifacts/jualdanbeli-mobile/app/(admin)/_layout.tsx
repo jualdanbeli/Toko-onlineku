@@ -49,11 +49,19 @@ export default function AdminLayout() {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="index" options={{ title: "Panel Admin" }} />
-      <Stack.Screen name="users" options={{ title: "Manajemen Pengguna" }} />
-      <Stack.Screen name="orders" options={{ title: "Semua Pesanan" }} />
-      <Stack.Screen name="reports" options={{ title: "Laporan & Fraud" }} />
-      <Stack.Screen name="monitoring" options={{ title: "Monitoring Realtime" }} />
+      <Stack.Screen name="index"       options={{ title: "Panel Admin" }} />
+      <Stack.Screen name="monitoring"  options={{ title: "Monitoring Realtime" }} />
+      <Stack.Screen name="users"       options={{ title: "Manajemen Pengguna" }} />
+      <Stack.Screen name="orders"      options={{ title: "Semua Pesanan" }} />
+      <Stack.Screen name="reports"     options={{ title: "Laporan & Fraud" }} />
+      <Stack.Screen name="disputes"    options={{ title: "Sengketa Transaksi" }} />
+      <Stack.Screen name="withdrawals" options={{ title: "Penarikan Dana" }} />
+      <Stack.Screen name="products"    options={{ title: "Moderasi Produk" }} />
+      <Stack.Screen name="vouchers"    options={{ title: "Manajemen Voucher" }} />
+      <Stack.Screen name="analytics"   options={{ title: "Analytics Operator" }} />
+      <Stack.Screen name="support"     options={{ title: "Inbox CS & Pengaduan" }} />
+      <Stack.Screen name="security"    options={{ title: "Keamanan Sistem" }} />
+      <Stack.Screen name="settings"    options={{ title: "Pengaturan Platform" }} />
     </Stack>
   );
 }

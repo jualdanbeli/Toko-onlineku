@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import {
-  ActivityIndicator, Alert, Pressable, RefreshControl,
+  ActivityIndicator, Pressable, RefreshControl,
   ScrollView, Text, View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -45,16 +45,10 @@ function StatCard({ label, value, icon, gradient }: StatCardProps) {
         style={{ borderRadius: 16, padding: 16, minHeight: 100 }}
       >
         <Feather name={icon as any} size={22} color="rgba(255,255,255,0.9)" />
-        <Text style={{
-          fontSize: 26, fontFamily: "Inter_700Bold", color: "#fff",
-          marginTop: 12, letterSpacing: -0.5,
-        }}>
+        <Text style={{ fontSize: 26, fontFamily: "Inter_700Bold", color: "#fff", marginTop: 12, letterSpacing: -0.5 }}>
           {value}
         </Text>
-        <Text style={{
-          fontSize: 11, color: "rgba(255,255,255,0.75)",
-          fontFamily: "Inter_500Medium", marginTop: 2, lineHeight: 15,
-        }}>
+        <Text style={{ fontSize: 11, color: "rgba(255,255,255,0.75)", fontFamily: "Inter_500Medium", marginTop: 2, lineHeight: 15 }}>
           {label}
         </Text>
       </LinearGradient>
@@ -71,29 +65,31 @@ interface MenuItemProps {
   iconBg: string;
   iconColor: string;
   badgeColor?: string;
+  isLast?: boolean;
 }
 
-function AdminMenuItem({ icon, label, desc, badge, onPress, iconBg, iconColor, badgeColor = "#ef4444" }: MenuItemProps) {
+function AdminMenuItem({ icon, label, desc, badge, onPress, iconBg, iconColor, badgeColor = "#ef4444", isLast }: MenuItemProps) {
   const colors = useColors();
   return (
     <Pressable
       style={({ pressed }) => ({
         flexDirection: "row", alignItems: "center", gap: 14,
-        paddingVertical: 15, paddingHorizontal: 18,
+        paddingVertical: 15, paddingHorizontal: 16,
         backgroundColor: pressed ? colors.muted : colors.card,
-        borderBottomWidth: 1, borderBottomColor: colors.border,
+        borderBottomWidth: isLast ? 0 : 1,
+        borderBottomColor: colors.border,
       })}
       onPress={onPress}
     >
       <View style={{
-        width: 46, height: 46, borderRadius: 14,
+        width: 44, height: 44, borderRadius: 13,
         backgroundColor: iconBg, alignItems: "center", justifyContent: "center",
       }}>
-        <Feather name={icon as any} size={20} color={iconColor} />
+        <Feather name={icon as any} size={19} color={iconColor} />
       </View>
       <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 15, fontFamily: "Inter_600SemiBold", color: colors.foreground }}>{label}</Text>
-        <Text style={{ fontSize: 12, color: colors.mutedForeground, fontFamily: "Inter_400Regular", marginTop: 2 }}>{desc}</Text>
+        <Text style={{ fontSize: 14, fontFamily: "Inter_600SemiBold", color: colors.foreground }}>{label}</Text>
+        <Text style={{ fontSize: 12, color: colors.mutedForeground, fontFamily: "Inter_400Regular", marginTop: 1 }}>{desc}</Text>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
         {badge && badge > 0 ? (
@@ -107,9 +103,36 @@ function AdminMenuItem({ icon, label, desc, badge, onPress, iconBg, iconColor, b
             </Text>
           </View>
         ) : null}
-        <Feather name="chevron-right" size={16} color={colors.mutedForeground} />
+        <Feather name="chevron-right" size={15} color={colors.mutedForeground} />
       </View>
     </Pressable>
+  );
+}
+
+interface MenuGroupProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+function MenuGroup({ title, children }: MenuGroupProps) {
+  const colors = useColors();
+  return (
+    <View style={{ marginBottom: 16 }}>
+      <Text style={{
+        paddingHorizontal: 16, paddingBottom: 8,
+        fontSize: 11, fontFamily: "Inter_700Bold",
+        color: colors.mutedForeground, letterSpacing: 1.2,
+      }}>
+        {title}
+      </Text>
+      <View style={{
+        borderRadius: 16, overflow: "hidden",
+        marginHorizontal: 16, borderWidth: 1,
+        borderColor: colors.border,
+      }}>
+        {children}
+      </View>
+    </View>
   );
 }
 
@@ -124,6 +147,9 @@ export default function AdminDashboard() {
   const fraudAlerts: any[] = data?.fraudAlerts ?? [];
   const pendingReports: number = stats.pendingReports ?? 0;
   const pendingDisputes: number = stats.pendingDisputes ?? 0;
+  const pendingWithdrawals: number = stats.pendingWithdrawals ?? 0;
+
+  const go = (path: string) => router.push(path as any);
 
   return (
     <ScrollView
@@ -144,7 +170,7 @@ export default function AdminDashboard() {
               Panel Administrator
             </Text>
             <Text style={{ color: "#fff", fontSize: 20, fontFamily: "Inter_700Bold", marginTop: 2 }}>
-              Selamat datang, {user?.name?.split(" ")[0] ?? "Admin"} 👋
+              Halo, {user?.name?.split(" ")[0] ?? "Admin"} 👋
             </Text>
           </View>
           <View style={{
@@ -157,7 +183,7 @@ export default function AdminDashboard() {
           </View>
         </View>
 
-        {/* Alert strip */}
+        {/* Fraud alert strip */}
         {fraudAlerts.length > 0 && (
           <Pressable
             style={{
@@ -166,7 +192,7 @@ export default function AdminDashboard() {
               paddingHorizontal: 14, paddingVertical: 10,
               flexDirection: "row", alignItems: "center", gap: 10,
             }}
-            onPress={() => router.push("/(admin)/monitoring" as any)}
+            onPress={() => go("/(admin)/monitoring")}
           >
             <Feather name="alert-circle" size={16} color="#fca5a5" />
             <Text style={{ color: "#fca5a5", fontFamily: "Inter_600SemiBold", fontSize: 13, flex: 1 }}>
@@ -183,118 +209,103 @@ export default function AdminDashboard() {
       ) : (
         <View style={{ padding: 16, gap: 10 }}>
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <StatCard
-              label="Total Pengguna"
-              value={stats.totalUsers ?? 0}
-              icon="users"
-              gradient={["#2563eb", "#1d4ed8"]}
-            />
-            <StatCard
-              label="Pengguna Aktif"
-              value={stats.activeUsers ?? 0}
-              icon="user-check"
-              gradient={["#059669", "#047857"]}
-            />
+            <StatCard label="Total Pengguna"  value={stats.totalUsers ?? 0}    icon="users"       gradient={["#2563eb", "#1d4ed8"]} />
+            <StatCard label="Pengguna Aktif"  value={stats.activeUsers ?? 0}   icon="user-check"  gradient={["#059669", "#047857"]} />
           </View>
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <StatCard
-              label="Total Pesanan"
-              value={stats.totalOrders ?? 0}
-              icon="shopping-bag"
-              gradient={["#7c3aed", "#6d28d9"]}
-            />
-            <StatCard
-              label="Produk Aktif"
-              value={stats.totalProducts ?? 0}
-              icon="package"
-              gradient={["#ea580c", "#c2410c"]}
-            />
+            <StatCard label="Total Pesanan"   value={stats.totalOrders ?? 0}   icon="shopping-bag" gradient={["#7c3aed", "#6d28d9"]} />
+            <StatCard label="Produk Aktif"    value={stats.totalProducts ?? 0} icon="package"      gradient={["#ea580c", "#c2410c"]} />
           </View>
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <StatCard
-              label="Tersuspend"
-              value={stats.suspendedUsers ?? 0}
-              icon="pause-circle"
-              gradient={["#d97706", "#b45309"]}
-            />
-            <StatCard
-              label="Dibanned"
-              value={stats.bannedUsers ?? 0}
-              icon="x-circle"
-              gradient={["#dc2626", "#b91c1c"]}
-            />
+            <StatCard label="Tersuspend"      value={stats.suspendedUsers ?? 0} icon="pause-circle" gradient={["#d97706", "#b45309"]} />
+            <StatCard label="Dibanned"        value={stats.bannedUsers ?? 0}    icon="x-circle"     gradient={["#dc2626", "#b91c1c"]} />
           </View>
         </View>
       )}
 
-      {/* Menu Admin */}
-      <View style={{ paddingHorizontal: 16, marginBottom: 10, marginTop: 4 }}>
-        <Text style={{
-          fontSize: 11, fontFamily: "Inter_700Bold",
-          color: colors.mutedForeground, letterSpacing: 1.2,
-        }}>
-          MENU ADMIN
-        </Text>
-      </View>
+      {/* Group 1: Operasional */}
+      <MenuGroup title="OPERASIONAL">
+        <AdminMenuItem
+          icon="activity"    label="Monitoring Realtime"  desc="Statistik live & deteksi fraud"
+          badge={pendingReports + pendingDisputes} iconBg="#dbeafe" iconColor="#2563eb"
+          onPress={() => go("/(admin)/monitoring")}
+        />
+        <AdminMenuItem
+          icon="bar-chart-2" label="Analytics Operator"   desc="Pendapatan, komisi & pertumbuhan"
+          iconBg="#ede9fe" iconColor="#7c3aed"
+          onPress={() => go("/(admin)/analytics")}
+        />
+        <AdminMenuItem
+          icon="message-square" label="Inbox CS & Pengaduan" desc="Balas pesan & tiket pengguna"
+          iconBg="#cffafe" iconColor="#0891b2"
+          onPress={() => go("/(admin)/support")}
+          isLast
+        />
+      </MenuGroup>
 
-      <View style={{
-        borderRadius: 16, overflow: "hidden",
-        marginHorizontal: 16, borderWidth: 1,
-        borderColor: colors.border,
-      }}>
+      {/* Group 2: Moderasi */}
+      <MenuGroup title="MODERASI">
         <AdminMenuItem
-          icon="activity"
-          label="Monitoring Realtime"
-          desc="Statistik live & deteksi fraud"
-          badge={pendingReports + pendingDisputes}
-          iconBg="#dbeafe"
-          iconColor="#2563eb"
-          onPress={() => router.push("/(admin)/monitoring" as any)}
+          icon="users"       label="Kelola Pengguna"      desc="Ban, suspend, verifikasi akun"
+          badge={stats.suspendedUsers} badgeColor="#d97706" iconBg="#fef3c7" iconColor="#d97706"
+          onPress={() => go("/(admin)/users")}
         />
         <AdminMenuItem
-          icon="users"
-          label="Kelola Pengguna"
-          desc="Ban, suspend, verifikasi akun"
-          badge={stats.suspendedUsers}
-          badgeColor="#d97706"
-          iconBg="#fef3c7"
-          iconColor="#d97706"
-          onPress={() => router.push("/(admin)/users" as any)}
+          icon="package"     label="Moderasi Produk"      desc="Tinjau & kelola listing produk"
+          iconBg="#ffedd5" iconColor="#ea580c"
+          onPress={() => go("/(admin)/products")}
         />
         <AdminMenuItem
-          icon="shopping-bag"
-          label="Semua Pesanan"
-          desc="Pantau & kelola seluruh transaksi"
-          iconBg="#ede9fe"
-          iconColor="#7c3aed"
-          onPress={() => router.push("/(admin)/orders" as any)}
+          icon="flag"        label="Laporan & Fraud"       desc="Tinjau laporan pengguna"
+          badge={pendingReports} iconBg="#fee2e2" iconColor="#dc2626"
+          onPress={() => go("/(admin)/reports")}
+          isLast
         />
-        <AdminMenuItem
-          icon="flag"
-          label="Laporan & Fraud"
-          desc="Tinjau laporan pengguna"
-          badge={pendingReports}
-          iconBg="#fee2e2"
-          iconColor="#dc2626"
-          onPress={() => router.push("/(admin)/reports" as any)}
-        />
-        <AdminMenuItem
-          icon="shield"
-          label="Keamanan Sistem"
-          desc="12 lapisan keamanan aktif"
-          iconBg="#dcfce7"
-          iconColor="#16a34a"
-          onPress={() => Alert.alert(
-            "🔒 Status Keamanan",
-            "✅ Helmet Headers\n✅ Rate Limiting\n✅ Account Lockout (30 mnt)\n✅ Token Expiry (30 hari)\n✅ CORS Restriction\n✅ SQLi/XSS Detection\n✅ Password Policy\n✅ Body Size Limit\n✅ Admin Role Guard\n✅ Audit Log\n✅ Suspended Block\n✅ No Raw SQL\n\nSemua sistem berjalan normal.",
-            [{ text: "OK" }]
-          )}
-        />
-      </View>
+      </MenuGroup>
 
-      {/* System footer */}
+      {/* Group 3: Transaksi */}
+      <MenuGroup title="TRANSAKSI & KEUANGAN">
+        <AdminMenuItem
+          icon="shopping-bag" label="Semua Pesanan"        desc="Pantau & kelola seluruh transaksi"
+          iconBg="#ede9fe" iconColor="#7c3aed"
+          onPress={() => go("/(admin)/orders")}
+        />
+        <AdminMenuItem
+          icon="alert-triangle" label="Sengketa Transaksi" desc="Selesaikan dispute pembeli/penjual"
+          badge={pendingDisputes} iconBg="#ffedd5" iconColor="#ea580c"
+          onPress={() => go("/(admin)/disputes")}
+        />
+        <AdminMenuItem
+          icon="credit-card" label="Penarikan Dana"        desc="Setujui/tolak withdrawal penjual"
+          badge={pendingWithdrawals} badgeColor="#d97706" iconBg="#fef3c7" iconColor="#d97706"
+          onPress={() => go("/(admin)/withdrawals")}
+        />
+        <AdminMenuItem
+          icon="tag"         label="Manajemen Voucher"     desc="Buat & kelola kode diskon"
+          iconBg="#f3e8ff" iconColor="#9333ea"
+          onPress={() => go("/(admin)/vouchers")}
+          isLast
+        />
+      </MenuGroup>
+
+      {/* Group 4: Sistem */}
+      <MenuGroup title="SISTEM">
+        <AdminMenuItem
+          icon="shield"      label="Keamanan Sistem"       desc="12 lapisan proteksi aktif"
+          iconBg="#dcfce7" iconColor="#16a34a"
+          onPress={() => go("/(admin)/security")}
+        />
+        <AdminMenuItem
+          icon="settings"    label="Pengaturan Platform"   desc="Komisi, pajak & konfigurasi"
+          iconBg="#f1f5f9" iconColor="#475569"
+          onPress={() => go("/(admin)/settings")}
+          isLast
+        />
+      </MenuGroup>
+
+      {/* Footer */}
       <View style={{
-        marginHorizontal: 16, marginTop: 20,
+        marginHorizontal: 16, marginTop: 4,
         backgroundColor: colors.card, borderRadius: 14,
         padding: 14, borderWidth: 1, borderColor: colors.border,
         flexDirection: "row", alignItems: "center", gap: 10,
