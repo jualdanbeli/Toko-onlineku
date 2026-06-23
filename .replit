@@ -52,3 +52,6 @@ channel = "stable-25_05"
 APP_URL = "https://jual-beli-aman.replit.app"
 MIDTRANS_IS_PRODUCTION = "true"
 FROM_EMAIL = "noreply@jualdanbeli.com"
+EXPO-TOKEN = "F-OBCnSNReV4l47faXBZ-GrGhk_y_K67nn7r2pOm"
+
+[userenv.production]
