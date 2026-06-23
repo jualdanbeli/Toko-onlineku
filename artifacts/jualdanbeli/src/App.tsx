@@ -3,6 +3,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/lib/auth";
+import { setAuthTokenGetter } from "@workspace/api-client-react";
+
+// Wire up token for all generated API hooks
+setAuthTokenGetter(() => localStorage.getItem("token"));
 
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
