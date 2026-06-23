@@ -27,8 +27,9 @@ export function MainLayout({ children }: MainLayoutProps) {
               Marketplace terpercaya Indonesia. Transaksi aman, cepat, dan terlindungi sistem Rekening Bersama.
             </p>
             <p className="text-xs text-muted-foreground">
-              PT jualdanbeli Indonesia<br />
-              Terdaftar di Indonesia
+              jualdanbeli — Usaha Perseorangan<br />
+              NIB: <span className="font-mono font-medium text-foreground">2403240017145</span><br />
+              KBLI 47911 — Perdagangan Melalui Internet
             </p>
           </div>
 
@@ -76,7 +77,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 mt-10 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-          <span>© {new Date().getFullYear()} PT jualdanbeli Indonesia. Hak cipta dilindungi undang-undang.</span>
+          <span>© {new Date().getFullYear()} jualdanbeli · NIB <span className="font-mono">2403240017145</span> · Terdaftar di OSS Indonesia</span>
           <div className="flex gap-4">
             <Link href="/terms" className="hover:text-primary transition-colors">Syarat & Ketentuan</Link>
             <Link href="/privacy" className="hover:text-primary transition-colors">Kebijakan Privasi</Link>

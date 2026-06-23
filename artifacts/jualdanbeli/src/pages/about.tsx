@@ -84,15 +84,29 @@ export default function About() {
         <h2 className="text-2xl font-bold mb-4">Informasi Perusahaan</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-muted-foreground">
           <div className="space-y-2">
-            <div><strong className="text-foreground">Nama Perusahaan:</strong> PT jualdanbeli Indonesia</div>
-            <div><strong className="text-foreground">Domisili:</strong> Jakarta, Indonesia</div>
+            <div><strong className="text-foreground">Nama Usaha:</strong> jualdanbeli</div>
+            <div><strong className="text-foreground">Bentuk Usaha:</strong> Usaha Perseorangan</div>
+            <div>
+              <strong className="text-foreground">NIB:</strong>{" "}
+              <span className="font-mono font-semibold text-foreground bg-muted px-2 py-0.5 rounded">2403240017145</span>
+            </div>
+            <div><strong className="text-foreground">Kode KBLI:</strong> 47911 — Perdagangan Melalui Internet</div>
             <div><strong className="text-foreground">Bidang Usaha:</strong> Perdagangan Melalui Sistem Elektronik (PMSE)</div>
           </div>
           <div className="space-y-2">
-            <div><strong className="text-foreground">Email:</strong> hello@jualdanbeli.com</div>
+            <div><strong className="text-foreground">Legalitas:</strong> Terdaftar di OSS (oss.go.id)</div>
+            <div><strong className="text-foreground">Pajak:</strong> PPh Final UMKM 0,5% (PP No. 23/2018)</div>
+            <div><strong className="text-foreground">Email:</strong> admin@jualdanbeli.com</div>
             <div><strong className="text-foreground">Layanan Pelanggan:</strong> cs@jualdanbeli.com</div>
             <div><strong className="text-foreground">Jam Operasional:</strong> Senin–Jumat, 08.00–17.00 WIB</div>
           </div>
+        </div>
+        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3">
+          <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <p className="text-sm text-green-800">
+            jualdanbeli adalah platform marketplace resmi yang terdaftar dan berizin di Indonesia melalui sistem <strong>OSS (Online Single Submission)</strong> Kementerian Investasi/BKPM.
+            NIB <span className="font-mono font-semibold">2403240017145</span> dapat diverifikasi langsung di <a href="https://oss.go.id" target="_blank" rel="noopener noreferrer" className="underline hover:text-green-900">oss.go.id</a>.
+          </p>
         </div>
       </section>
 
