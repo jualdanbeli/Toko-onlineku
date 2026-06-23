@@ -50,11 +50,31 @@ import AdminPlatformSettings from "@/pages/admin/settings";
 import Wishlist from "@/pages/wishlist";
 import AdminVouchers from "@/pages/admin/vouchers";
 import AdminMonitoring from "@/pages/admin/monitoring";
+import AdminSecurity from "@/pages/admin/security";
 import LivePage from "@/pages/live/index";
 import WatchLive from "@/pages/live/watch";
 import SellerLive from "@/pages/seller/live";
 
-const queryClient = new QueryClient();
+// Global 401/403 handler — auto-logout bila token expired atau diblokir
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error: any) => {
+        if (error?.status === 401 || error?.status === 403) return false;
+        return failureCount < 2;
+      },
+    },
+    mutations: {
+      onError: (error: any) => {
+        if (error?.status === 401) {
+          localStorage.removeItem("token");
+          queryClient.clear();
+          window.location.href = "/login";
+        }
+      },
+    },
+  },
+});
 
 function Router() {
   return (
@@ -100,6 +120,7 @@ function Router() {
       <Route path="/admin/analytics" component={AdminAnalytics} />
       <Route path="/admin/platform-settings" component={AdminPlatformSettings} />
       <Route path="/admin/monitoring" component={AdminMonitoring} />
+      <Route path="/admin/security" component={AdminSecurity} />
 
       {/* Legal & Info Pages */}
       <Route path="/terms" component={Terms} />

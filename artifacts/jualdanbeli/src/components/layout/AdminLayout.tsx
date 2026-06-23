@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Package, ShoppingBag, AlertTriangle,
   ArrowLeft, LogOut, FileWarning, WalletCards, HeadphonesIcon,
   Tag, BarChart2, Settings, ShieldAlert, Activity, ChevronRight,
-  Bell, TrendingUp,
+  Bell, TrendingUp, ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useLogout } from "@workspace/api-client-react";
@@ -76,6 +76,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
       items: [
         { icon: Tag, label: "Voucher / Kupon", href: "/admin/vouchers" },
         { icon: HeadphonesIcon, label: "CS / Pengaduan", href: "/admin/support" },
+        { icon: ShieldCheck, label: "Keamanan Sistem", href: "/admin/security" },
         { icon: Settings, label: "Pengaturan Platform", href: "/admin/platform-settings" },
       ],
     },
