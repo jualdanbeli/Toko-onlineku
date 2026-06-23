@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { db, ordersTable, orderItemsTable, productsTable, usersTable, disputesTable, walletsTable, transactionsTable, notificationsTable } from "@workspace/db";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { requireAuth } from "../lib/auth";
-import { sendOrderCreatedEmail, sendOrderStatusEmail } from "../lib/email";
+import { sendOrderCreatedEmail, sendOrderStatusEmail, sendShippingDisputeEmail } from "../lib/email";
 
 const PLATFORM_COMMISSION_RATE = 0.02;
 
@@ -220,15 +220,68 @@ router.post("/orders/:orderId/confirm-received", requireAuth, async (req, res): 
 router.post("/orders/:orderId/dispute", requireAuth, async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.orderId) ? req.params.orderId[0] : req.params.orderId;
   const orderId = parseInt(raw, 10);
-  const { reason, description } = req.body;
+  const { reason, description, disputeType, courierName, trackingNumber } = req.body;
   if (!reason || !description) { res.status(400).json({ error: "Missing required fields" }); return; }
 
   const [order] = await db.select().from(ordersTable).where(eq(ordersTable.id, orderId));
   if (!order) { res.status(404).json({ error: "Order not found" }); return; }
+  if (order.buyerId !== req.user!.id) { res.status(403).json({ error: "Forbidden" }); return; }
+  if (order.status !== "shipped" && order.status !== "delivered" && order.status !== "paid" && order.status !== "confirmed") {
+    res.status(400).json({ error: "Sengketa tidak dapat dibuka untuk pesanan dengan status ini" }); return;
+  }
 
-  await db.insert(disputesTable).values({ orderId, reason, description, status: "open" });
+  const isCourierIssue = disputeType === "paket_tidak_sampai" || disputeType === "kurir_nakal" || disputeType === "paket_hilang";
+  const resolvedTrackingNumber = trackingNumber || order.trackingNumber;
+  const resolvedCourierName = courierName || (order.courierId ? String(order.courierId) : null);
+
+  const [newDispute] = await db.insert(disputesTable).values({
+    orderId,
+    reason,
+    description,
+    disputeType: disputeType || "other",
+    courierName: resolvedCourierName,
+    trackingNumber: resolvedTrackingNumber,
+    escalatedToCourier: isCourierIssue ? "pending" : "no",
+    escalatedAt: isCourierIssue ? new Date() : null,
+    status: "open",
+  }).returning();
+
   const [updated] = await db.update(ordersTable).set({ status: "disputed", updatedAt: new Date() })
     .where(eq(ordersTable.id, orderId)).returning();
+
+  // Notify admin
+  const admins = await db.select().from(usersTable).where(eq(usersTable.role, "admin"));
+  for (const admin of admins) {
+    await db.insert(notificationsTable).values({
+      userId: admin.id,
+      type: "dispute",
+      title: isCourierIssue ? "🚨 Laporan Masalah Kurir Baru" : "⚠️ Sengketa Baru",
+      body: `Pesanan #${orderId}: ${reason}${resolvedCourierName ? ` — Kurir: ${resolvedCourierName}` : ""}`,
+      metadata: { orderId, disputeId: newDispute.id, disputeType: disputeType || "other" },
+    });
+  }
+
+  // Notify buyer
+  await db.insert(notificationsTable).values({
+    userId: order.buyerId,
+    type: "dispute",
+    title: "Laporan pengiriman diterima",
+    body: `Laporan untuk pesanan #${orderId} sedang diproses. Tim kami akan menghubungi Anda dalam 1×24 jam.`,
+    metadata: { orderId },
+  });
+
+  // Send email notifications
+  const [buyer] = await db.select().from(usersTable).where(eq(usersTable.id, order.buyerId));
+  if (buyer) {
+    sendShippingDisputeEmail(buyer.email, {
+      orderId,
+      buyerName: buyer.name,
+      disputeType: disputeType || "other",
+      courierName: resolvedCourierName,
+      trackingNumber: resolvedTrackingNumber,
+      description,
+    }).catch(() => {});
+  }
 
   res.status(201).json(await enrichOrder(updated));
 });

@@ -12,6 +12,15 @@ export interface Dispute {
   orderId: number;
   reason: string;
   description?: string;
+  disputeType?: string;
+  /** @nullable */
+  courierName?: string | null;
+  /** @nullable */
+  trackingNumber?: string | null;
+  /** @nullable */
+  escalatedToCourier?: string | null;
+  /** @nullable */
+  escalatedAt?: Date | null;
   status: DisputeStatus;
   /** @nullable */
   ruling?: string | null;

@@ -1844,6 +1844,17 @@ components:
           type: string
         description:
           type: string
+        disputeType:
+          type: string
+        courierName:
+          type: ["string", "null"]
+        trackingNumber:
+          type: ["string", "null"]
+        escalatedToCourier:
+          type: ["string", "null"]
+        escalatedAt:
+          type: ["string", "null"]
+          format: date-time
         status:
           type: string
           enum: [open, investigating, resolved_buyer, resolved_seller, closed]
@@ -1859,8 +1870,14 @@ components:
       properties:
         reason:
           type: string
-          enum: [item_not_received, item_not_as_described, fake_item, seller_unresponsive, other]
         description:
+          type: string
+        disputeType:
+          type: string
+          enum: [paket_tidak_sampai, paket_hilang, kurir_nakal, paket_rusak, barang_tidak_sesuai, other]
+        courierName:
+          type: string
+        trackingNumber:
           type: string
 
     DisputeResolution:

@@ -282,6 +282,15 @@ export interface Dispute {
   orderId: number;
   reason: string;
   description?: string;
+  disputeType?: string;
+  /** @nullable */
+  courierName?: string | null;
+  /** @nullable */
+  trackingNumber?: string | null;
+  /** @nullable */
+  escalatedToCourier?: string | null;
+  /** @nullable */
+  escalatedAt?: string | null;
   status: DisputeStatus;
   /** @nullable */
   ruling?: string | null;
@@ -330,20 +339,24 @@ export interface OrderStatusUpdate {
   notes?: string;
 }
 
-export type DisputeInputReason = typeof DisputeInputReason[keyof typeof DisputeInputReason];
+export type DisputeInputDisputeType = typeof DisputeInputDisputeType[keyof typeof DisputeInputDisputeType];
 
 
-export const DisputeInputReason = {
-  item_not_received: 'item_not_received',
-  item_not_as_described: 'item_not_as_described',
-  fake_item: 'fake_item',
-  seller_unresponsive: 'seller_unresponsive',
+export const DisputeInputDisputeType = {
+  paket_tidak_sampai: 'paket_tidak_sampai',
+  paket_hilang: 'paket_hilang',
+  kurir_nakal: 'kurir_nakal',
+  paket_rusak: 'paket_rusak',
+  barang_tidak_sesuai: 'barang_tidak_sesuai',
   other: 'other',
 } as const;
 
 export interface DisputeInput {
-  reason: DisputeInputReason;
+  reason: string;
   description: string;
+  disputeType?: DisputeInputDisputeType;
+  courierName?: string;
+  trackingNumber?: string;
 }
 
 export type DisputeResolutionOutcome = typeof DisputeResolutionOutcome[keyof typeof DisputeResolutionOutcome];

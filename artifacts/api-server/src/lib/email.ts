@@ -134,6 +134,51 @@ export async function sendPasswordResetEmail(to: string, data: { name: string; r
   await sendMail(to, "Reset Password — jualdanbeli", html);
 }
 
+export async function sendShippingDisputeEmail(to: string, data: {
+  orderId: number;
+  buyerName: string;
+  disputeType: string;
+  courierName?: string | null;
+  trackingNumber?: string | null;
+  description: string;
+}) {
+  const typeMap: Record<string, { label: string; color: string; bg: string; urgent: boolean }> = {
+    paket_tidak_sampai: { label: "Paket Tidak Sampai", color: "#D97706", bg: "#FFFBEB", urgent: false },
+    paket_hilang:       { label: "Paket Hilang", color: "#DC2626", bg: "#FEF2F2", urgent: true },
+    kurir_nakal:        { label: "Oknum Kurir Bermasalah", color: "#DC2626", bg: "#FEF2F2", urgent: true },
+    paket_rusak:        { label: "Paket Rusak / Cacat", color: "#D97706", bg: "#FFFBEB", urgent: false },
+    barang_tidak_sesuai:{ label: "Barang Tidak Sesuai", color: "#7C3AED", bg: "#F5F3FF", urgent: false },
+    other:              { label: "Sengketa Umum", color: "#555", bg: "#F5F5F5", urgent: false },
+  };
+  const t = typeMap[data.disputeType] ?? typeMap.other;
+  const urgentBanner = t.urgent ? `<div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:12px 16px;margin-bottom:16px;color:#991B1B;font-size:13px;font-weight:600;">🚨 Kasus ini akan langsung diescalasi ke manajemen kurir dan tim keamanan jualdanbeli.</div>` : "";
+
+  const html = baseTemplate(`
+    <h2>Laporan Pengiriman Diterima ✅</h2>
+    <p>Halo <strong>${data.buyerName}</strong>, laporan Anda untuk pesanan #${data.orderId} telah diterima dan sedang diproses.</p>
+    ${urgentBanner}
+    <table>
+      <tr><td class="label">No. Pesanan</td><td class="value">#${data.orderId}</td></tr>
+      <tr><td class="label">Jenis Masalah</td><td class="value"><span class="badge" style="background:${t.bg};color:${t.color}">${t.label}</span></td></tr>
+      ${data.courierName ? `<tr><td class="label">Kurir</td><td class="value">${data.courierName}</td></tr>` : ""}
+      ${data.trackingNumber ? `<tr><td class="label">No. Resi</td><td class="value font-mono">${data.trackingNumber}</td></tr>` : ""}
+      <tr><td class="label">Deskripsi</td><td class="value" style="white-space:pre-wrap">${data.description}</td></tr>
+    </table>
+    <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:16px;margin-top:20px">
+      <p style="margin:0;font-size:13px;color:#1E40AF"><strong>📋 Apa yang terjadi selanjutnya:</strong></p>
+      <ul style="margin:8px 0 0;padding-left:20px;font-size:13px;color:#1E40AF;line-height:2">
+        <li>Tim admin akan memverifikasi laporan dalam <strong>1×24 jam</strong></li>
+        <li>Dana escrow tetap ditahan aman selama proses berlangsung</li>
+        ${t.urgent ? "<li>Laporan diteruskan ke manajemen kurir untuk investigasi</li>" : ""}
+        <li>Keputusan final disampaikan dalam <strong>3–5 hari kerja</strong></li>
+      </ul>
+    </div>
+    <a href="${APP_URL}/orders/${data.orderId}" class="btn">Pantau Status Laporan</a>
+    <p style="margin-top:16px;font-size:12px;color:#999">Pertanyaan? Hubungi CS kami melalui fitur Support di aplikasi jualdanbeli.</p>
+  `);
+  await sendMail(to, `Laporan pesanan #${data.orderId} diterima — jualdanbeli`, html);
+}
+
 export async function sendPaymentSuccessEmail(to: string, data: {
   orderId: number;
   buyerName: string;

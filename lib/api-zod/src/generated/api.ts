@@ -947,6 +947,11 @@ export const GetOrdersResponseItem = zod.object({
   "orderId": zod.number(),
   "reason": zod.string(),
   "description": zod.string().optional(),
+  "disputeType": zod.string().optional(),
+  "courierName": zod.string().nullish(),
+  "trackingNumber": zod.string().nullish(),
+  "escalatedToCourier": zod.string().nullish(),
+  "escalatedAt": zod.coerce.date().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1044,6 +1049,11 @@ export const GetOrderResponse = zod.object({
   "orderId": zod.number(),
   "reason": zod.string(),
   "description": zod.string().optional(),
+  "disputeType": zod.string().optional(),
+  "courierName": zod.string().nullish(),
+  "trackingNumber": zod.string().nullish(),
+  "escalatedToCourier": zod.string().nullish(),
+  "escalatedAt": zod.coerce.date().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1131,6 +1141,11 @@ export const UpdateOrderStatusResponse = zod.object({
   "orderId": zod.number(),
   "reason": zod.string(),
   "description": zod.string().optional(),
+  "disputeType": zod.string().optional(),
+  "courierName": zod.string().nullish(),
+  "trackingNumber": zod.string().nullish(),
+  "escalatedToCourier": zod.string().nullish(),
+  "escalatedAt": zod.coerce.date().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1212,6 +1227,11 @@ export const ConfirmOrderReceivedResponse = zod.object({
   "orderId": zod.number(),
   "reason": zod.string(),
   "description": zod.string().optional(),
+  "disputeType": zod.string().optional(),
+  "courierName": zod.string().nullish(),
+  "trackingNumber": zod.string().nullish(),
+  "escalatedToCourier": zod.string().nullish(),
+  "escalatedAt": zod.coerce.date().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1229,8 +1249,11 @@ export const OpenDisputeParams = zod.object({
 })
 
 export const OpenDisputeBody = zod.object({
-  "reason": zod.enum(['item_not_received', 'item_not_as_described', 'fake_item', 'seller_unresponsive', 'other']),
-  "description": zod.string()
+  "reason": zod.string(),
+  "description": zod.string(),
+  "disputeType": zod.enum(['paket_tidak_sampai', 'paket_hilang', 'kurir_nakal', 'paket_rusak', 'barang_tidak_sesuai', 'other']).optional(),
+  "courierName": zod.string().optional(),
+  "trackingNumber": zod.string().optional()
 })
 
 
@@ -1887,6 +1910,11 @@ export const AdminGetOrdersResponseItem = zod.object({
   "orderId": zod.number(),
   "reason": zod.string(),
   "description": zod.string().optional(),
+  "disputeType": zod.string().optional(),
+  "courierName": zod.string().nullish(),
+  "trackingNumber": zod.string().nullish(),
+  "escalatedToCourier": zod.string().nullish(),
+  "escalatedAt": zod.coerce.date().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1905,6 +1933,11 @@ export const AdminGetDisputesResponseItem = zod.object({
   "orderId": zod.number(),
   "reason": zod.string(),
   "description": zod.string().optional(),
+  "disputeType": zod.string().optional(),
+  "courierName": zod.string().nullish(),
+  "trackingNumber": zod.string().nullish(),
+  "escalatedToCourier": zod.string().nullish(),
+  "escalatedAt": zod.coerce.date().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1929,6 +1962,11 @@ export const AdminResolveDisputeResponse = zod.object({
   "orderId": zod.number(),
   "reason": zod.string(),
   "description": zod.string().optional(),
+  "disputeType": zod.string().optional(),
+  "courierName": zod.string().nullish(),
+  "trackingNumber": zod.string().nullish(),
+  "escalatedToCourier": zod.string().nullish(),
+  "escalatedAt": zod.coerce.date().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()

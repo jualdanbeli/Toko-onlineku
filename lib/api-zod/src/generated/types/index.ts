@@ -34,7 +34,7 @@ export * from './courier';
 export * from './dashboardSummary';
 export * from './dispute';
 export * from './disputeInput';
-export * from './disputeInputReason';
+export * from './disputeInputDisputeType';
 export * from './disputeResolution';
 export * from './disputeResolutionOutcome';
 export * from './disputeStatus';

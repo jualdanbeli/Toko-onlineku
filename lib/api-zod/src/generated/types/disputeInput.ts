@@ -5,9 +5,12 @@
  * jualdanbeli Marketplace API
  * OpenAPI spec version: 0.1.0
  */
-import type { DisputeInputReason } from './disputeInputReason';
+import type { DisputeInputDisputeType } from './disputeInputDisputeType';
 
 export interface DisputeInput {
-  reason: DisputeInputReason;
+  reason: string;
   description: string;
+  disputeType?: DisputeInputDisputeType;
+  courierName?: string;
+  trackingNumber?: string;
 }
