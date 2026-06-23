@@ -54,7 +54,7 @@ Indonesia's premier online marketplace with escrow payments (rekening bersama), 
 
 | Role  | Email                      | Password    |
 |-------|----------------------------|-------------|
-| Admin | admin@jualdanbeli.com      | Admin123!   |
+| Admin | radjapamungkas007@gmail.com | Admin123!   |
 | Seller| seller1@jualdanbeli.com    | Seller123!  |
 | Seller| seller2@jualdanbeli.com    | Seller123!  |
 | Buyer | buyer@jualdanbeli.com      | Buyer123!   |

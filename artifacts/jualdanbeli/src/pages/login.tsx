@@ -54,7 +54,7 @@ export default function Login() {
   }
 
   function fillAdmin() {
-    form.setValue("email", "admin@jualdanbeli.com");
+    form.setValue("email", "radjapamungkas007@gmail.com");
     form.setValue("password", "Admin123!");
   }
 
@@ -139,7 +139,7 @@ export default function Login() {
               <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-xl">
                 <p className="text-xs font-semibold text-orange-800 mb-2">Masuk sebagai Operator/Admin:</p>
                 <div className="text-xs text-orange-700 space-y-0.5 mb-2">
-                  <div>Email: <span className="font-mono font-semibold">admin@jualdanbeli.com</span></div>
+                  <div>Email: <span className="font-mono font-semibold">radjapamungkas007@gmail.com</span></div>
                   <div>Password: <span className="font-mono font-semibold">Admin123!</span></div>
                 </div>
                 <Button
