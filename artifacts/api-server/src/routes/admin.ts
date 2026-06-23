@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
-import { db, usersTable, productsTable, ordersTable, disputesTable, transactionsTable } from "@workspace/db";
-import { eq, desc, ilike, and, sql } from "drizzle-orm";
+import { db, usersTable, productsTable, ordersTable, disputesTable, transactionsTable, reportsTable, banLogsTable } from "@workspace/db";
+import { eq, desc, ilike, and, sql, gte, inArray } from "drizzle-orm";
 import { requireAdmin } from "../lib/auth";
 
 const router: IRouter = Router();
@@ -108,6 +108,112 @@ router.patch("/admin/withdrawals/:withdrawalId/process", requireAdmin, async (re
   const { status, notes } = req.body;
   const [updated] = await db.update(transactionsTable).set({ status, ...(notes && { description: notes }) }).where(eq(transactionsTable.id, withdrawalId)).returning();
   res.json({ ...updated, amount: parseFloat(updated.amount as string) });
+});
+
+// GET /api/admin/monitoring — realtime platform monitoring data
+router.get("/admin/monitoring", requireAdmin, async (req, res): Promise<void> => {
+  const now = new Date();
+  const since24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const since7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  // Recent registrations (24h)
+  const recentUsers = await db.select({
+    id: usersTable.id, name: usersTable.name, email: usersTable.email,
+    role: usersTable.role, status: usersTable.status, createdAt: usersTable.createdAt,
+  }).from(usersTable).where(gte(usersTable.createdAt, since24h)).orderBy(desc(usersTable.createdAt)).limit(20);
+
+  // Orders (24h)
+  const orderStats = await db.select({
+    status: ordersTable.status,
+    count: sql<number>`cast(count(*) as int)`,
+    total: sql<number>`cast(coalesce(sum(${ordersTable.totalAmount}),0) as float)`,
+  }).from(ordersTable).where(gte(ordersTable.createdAt, since24h)).groupBy(ordersTable.status);
+
+  // Pending reports
+  const pendingReports = await db.select({
+    id: reportsTable.id, targetType: reportsTable.targetType, targetId: reportsTable.targetId,
+    reason: reportsTable.reason, status: reportsTable.status, createdAt: reportsTable.createdAt,
+    reporterId: reportsTable.reporterId,
+  }).from(reportsTable).where(eq(reportsTable.status, "pending")).orderBy(desc(reportsTable.createdAt)).limit(30);
+
+  // Enrich reports with reporter name
+  const reporterIds = [...new Set(pendingReports.map(r => r.reporterId))];
+  const reporterUsers = reporterIds.length > 0
+    ? await db.select({ id: usersTable.id, name: usersTable.name, email: usersTable.email })
+        .from(usersTable).where(inArray(usersTable.id, reporterIds))
+    : [];
+  const reporterMap: Record<number, any> = {};
+  for (const u of reporterUsers) reporterMap[u.id] = u;
+
+  // Target user IDs reported
+  const targetUserIds = pendingReports.filter(r => r.targetType === "user").map(r => r.targetId);
+  const targetUsers = targetUserIds.length > 0
+    ? await db.select({ id: usersTable.id, name: usersTable.name, email: usersTable.email, role: usersTable.role, status: usersTable.status })
+        .from(usersTable).where(inArray(usersTable.id, targetUserIds))
+    : [];
+  const targetMap: Record<number, any> = {};
+  for (const u of targetUsers) targetMap[u.id] = u;
+
+  // Fraud alerts: users reported 2+ times (pending)
+  const reportCounts: Record<number, number> = {};
+  for (const r of pendingReports) {
+    if (r.targetType === "user") reportCounts[r.targetId] = (reportCounts[r.targetId] || 0) + 1;
+  }
+  const fraudAlerts = Object.entries(reportCounts)
+    .filter(([, count]) => count >= 2)
+    .map(([uid, count]) => ({ user: targetMap[parseInt(uid)], reportCount: count }))
+    .filter(a => a.user)
+    .sort((a, b) => b.reportCount - a.reportCount);
+
+  // Recent ban actions (last 7d)
+  const recentBanLogs = await db.select().from(banLogsTable)
+    .where(gte(banLogsTable.createdAt, since7d))
+    .orderBy(desc(banLogsTable.createdAt)).limit(20);
+
+  const banLogUserIds = [...new Set([...recentBanLogs.map(l => l.userId), ...recentBanLogs.map(l => l.adminId)])];
+  const banLogUsers = banLogUserIds.length > 0
+    ? await db.select({ id: usersTable.id, name: usersTable.name, email: usersTable.email, role: usersTable.role })
+        .from(usersTable).where(inArray(usersTable.id, banLogUserIds))
+    : [];
+  const banLogUserMap: Record<number, any> = {};
+  for (const u of banLogUsers) banLogUserMap[u.id] = u;
+
+  // Platform counts
+  const [totalUsers] = await db.select({ count: sql<number>`cast(count(*) as int)` }).from(usersTable);
+  const [totalSellers] = await db.select({ count: sql<number>`cast(count(*) as int)` }).from(usersTable).where(eq(usersTable.role, "seller"));
+  const [totalBuyers] = await db.select({ count: sql<number>`cast(count(*) as int)` }).from(usersTable).where(eq(usersTable.role, "buyer"));
+  const [bannedUsers] = await db.select({ count: sql<number>`cast(count(*) as int)` }).from(usersTable).where(eq(usersTable.status, "banned"));
+  const [suspendedUsers] = await db.select({ count: sql<number>`cast(count(*) as int)` }).from(usersTable).where(eq(usersTable.status, "suspended"));
+  const [pendingDisputes] = await db.select({ count: sql<number>`cast(count(*) as int)` }).from(disputesTable).where(eq(disputesTable.status, "open"));
+  const [pendingReportCount] = await db.select({ count: sql<number>`cast(count(*) as int)` }).from(reportsTable).where(eq(reportsTable.status, "pending"));
+  const [pendingWithdrawals] = await db.select({ count: sql<number>`cast(count(*) as int)` }).from(transactionsTable).where(and(eq(transactionsTable.type, "withdrawal"), eq(transactionsTable.status, "pending")));
+
+  res.json({
+    updatedAt: now.toISOString(),
+    platformStats: {
+      totalUsers: totalUsers.count,
+      totalSellers: totalSellers.count,
+      totalBuyers: totalBuyers.count,
+      bannedUsers: bannedUsers.count,
+      suspendedUsers: suspendedUsers.count,
+      pendingDisputes: pendingDisputes.count,
+      pendingReports: pendingReportCount.count,
+      pendingWithdrawals: pendingWithdrawals.count,
+    },
+    recentUsers,
+    orderStats,
+    pendingReports: pendingReports.map(r => ({
+      ...r,
+      reporter: reporterMap[r.reporterId] || null,
+      targetUser: r.targetType === "user" ? targetMap[r.targetId] || null : null,
+    })),
+    fraudAlerts,
+    recentBanLogs: recentBanLogs.map(l => ({
+      ...l,
+      user: banLogUserMap[l.userId] || null,
+      admin: banLogUserMap[l.adminId] || null,
+    })),
+  });
 });
 
 export default router;

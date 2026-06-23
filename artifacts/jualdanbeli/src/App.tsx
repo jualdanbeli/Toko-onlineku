@@ -49,6 +49,7 @@ import AdminAnalytics from "@/pages/admin/analytics";
 import AdminPlatformSettings from "@/pages/admin/settings";
 import Wishlist from "@/pages/wishlist";
 import AdminVouchers from "@/pages/admin/vouchers";
+import AdminMonitoring from "@/pages/admin/monitoring";
 import LivePage from "@/pages/live/index";
 import WatchLive from "@/pages/live/watch";
 import SellerLive from "@/pages/seller/live";
@@ -98,6 +99,7 @@ function Router() {
       <Route path="/admin/withdrawals" component={AdminWithdrawals} />
       <Route path="/admin/analytics" component={AdminAnalytics} />
       <Route path="/admin/platform-settings" component={AdminPlatformSettings} />
+      <Route path="/admin/monitoring" component={AdminMonitoring} />
 
       {/* Legal & Info Pages */}
       <Route path="/terms" component={Terms} />
