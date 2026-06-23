@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db, usersTable, productsTable, reviewsTable, ordersTable } from "@workspace/db";
 import { eq, count, sql, avg } from "drizzle-orm";
-import { requireAuth } from "../lib/auth";
+import { requireAuth, hashPassword } from "../lib/auth";
 
 const router: IRouter = Router();
 
@@ -63,6 +63,23 @@ router.patch("/users/:userId/update", requireAuth, async (req, res): Promise<voi
   }).where(eq(usersTable.id, userId)).returning();
   const { passwordHash: _, ...safeUser } = updated;
   res.json({ ...safeUser, sellerInfo: { shopName: updated.shopName, shopDescription: updated.shopDescription, city: updated.city, province: updated.province, isVerified: updated.isVerified } });
+});
+
+router.post("/users/change-password", requireAuth, async (req, res): Promise<void> => {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    res.status(400).json({ error: "Password lama dan baru wajib diisi" }); return;
+  }
+  if (newPassword.length < 8) {
+    res.status(400).json({ error: "Password baru minimal 8 karakter" }); return;
+  }
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, req.user!.id));
+  if (!user) { res.status(404).json({ error: "User tidak ditemukan" }); return; }
+  if (user.passwordHash !== hashPassword(currentPassword)) {
+    res.status(400).json({ error: "Password lama tidak sesuai" }); return;
+  }
+  await db.update(usersTable).set({ passwordHash: hashPassword(newPassword), updatedAt: new Date() }).where(eq(usersTable.id, req.user!.id));
+  res.json({ message: "Password berhasil diubah" });
 });
 
 router.get("/users/:userId/products", async (req, res): Promise<void> => {
