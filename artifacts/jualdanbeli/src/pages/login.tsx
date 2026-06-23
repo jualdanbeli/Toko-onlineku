@@ -14,13 +14,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Store, ArrowRight, Loader2 } from "lucide-react";
+import { Store, Loader2, ShieldCheck, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  email: z.string().email("Masukkan email yang valid"),
+  password: z.string().min(1, "Password wajib diisi"),
 });
 
 export default function Login() {
@@ -28,56 +29,55 @@ export default function Login() {
   const { setToken } = useAuth();
   const { toast } = useToast();
   const loginMutation = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   function onSubmit(data: LoginInput) {
     loginMutation.mutate({ data }, {
       onSuccess: (res) => {
         setToken(res.token);
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully logged in.",
-        });
+        toast({ title: "Berhasil masuk!", description: "Selamat datang kembali." });
         setLocation(res.user.role === "admin" ? "/admin" : (res.user.role === "seller" ? "/seller/dashboard" : "/"));
       },
-      onError: (error: any) => {
+      onError: () => {
         toast({
           variant: "destructive",
-          title: "Login failed",
-          description: error?.response?.data?.error || "Invalid credentials. Please try again.",
+          title: "Login gagal",
+          description: "Email atau password salah. Coba lagi.",
         });
       }
     });
   }
 
+  function fillAdmin() {
+    form.setValue("email", "admin@jualdanbeli.com");
+    form.setValue("password", "Admin123!");
+  }
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-muted/30">
-      <div className="w-full md:w-1/2 lg:w-5/12 flex items-center justify-center p-8 lg:p-12">
+      {/* Form side */}
+      <div className="w-full md:w-1/2 lg:w-5/12 flex items-center justify-center p-6 lg:p-12">
         <div className="w-full max-w-md">
-          <div className="flex items-center gap-2 mb-8">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 mb-8">
             <div className="bg-primary text-primary-foreground p-1.5 rounded-lg">
               <Store className="w-6 h-6" />
             </div>
-            <span className="text-2xl font-bold text-primary tracking-tight">
-              jualdanbeli
-            </span>
-          </div>
+            <span className="text-2xl font-bold text-primary tracking-tight">jualdanbeli</span>
+          </Link>
 
           <Card className="border-none shadow-xl bg-white">
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-              <CardDescription>
-                Enter your email and password to access your account
-              </CardDescription>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-2xl font-bold">Masuk ke Akun</CardTitle>
+              <p className="text-sm text-muted-foreground">Masukkan email dan password kamu</p>
             </CardHeader>
-            <CardContent>
+
+            <CardContent className="pt-4">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
@@ -87,7 +87,13 @@ export default function Login() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="name@example.com" type="email" {...field} />
+                          <Input
+                            placeholder="contoh@email.com"
+                            type="email"
+                            autoComplete="email"
+                            className="h-11"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -98,65 +104,89 @@ export default function Login() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="flex items-center justify-between">
-                          <FormLabel>Password</FormLabel>
-                          <Link href="/forgot-password" className="text-xs font-medium text-primary hover:underline">
-                            Forgot password?
-                          </Link>
-                        </div>
+                        <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input placeholder="••••••••" type="password" {...field} />
+                          <div className="relative">
+                            <Input
+                              placeholder="Masukkan password"
+                              type={showPassword ? "text" : "password"}
+                              autoComplete="current-password"
+                              className="h-11 pr-10"
+                              {...field}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(v => !v)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full mt-6" disabled={loginMutation.isPending}>
-                    {loginMutation.isPending ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : null}
-                    Log In
+
+                  <Button type="submit" className="w-full h-11 font-semibold text-base" disabled={loginMutation.isPending}>
+                    {loginMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                    Masuk
                   </Button>
                 </form>
               </Form>
+
+              {/* Quick fill admin */}
+              <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-xl">
+                <p className="text-xs font-semibold text-orange-800 mb-2">Masuk sebagai Operator/Admin:</p>
+                <div className="text-xs text-orange-700 space-y-0.5 mb-2">
+                  <div>Email: <span className="font-mono font-semibold">admin@jualdanbeli.com</span></div>
+                  <div>Password: <span className="font-mono font-semibold">Admin123!</span></div>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-orange-300 text-orange-700 hover:bg-orange-100 text-xs h-8"
+                  onClick={fillAdmin}
+                >
+                  Isi Otomatis & Masuk sebagai Admin
+                </Button>
+              </div>
             </CardContent>
-            <CardFooter className="flex flex-col gap-4">
+
+            <CardFooter className="flex flex-col gap-3 pt-0">
               <div className="text-sm text-center text-muted-foreground">
-                Don't have an account?{" "}
+                Belum punya akun?{" "}
                 <Link href="/register" className="text-primary font-semibold hover:underline">
-                  Sign up
+                  Daftar sekarang
                 </Link>
               </div>
             </CardFooter>
           </Card>
         </div>
       </div>
+
+      {/* Branding side */}
       <div className="hidden md:flex flex-1 bg-primary items-center justify-center p-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary to-orange-600 opacity-90 z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary to-orange-600 opacity-90 z-0" />
         <div className="relative z-10 text-primary-foreground max-w-lg">
-          <h2 className="text-4xl font-extrabold mb-6">Trade with confidence.</h2>
+          <h2 className="text-4xl font-extrabold mb-6">Jual & Beli dengan Aman.</h2>
           <p className="text-lg text-primary-foreground/90 mb-8 leading-relaxed">
-            Join millions of Indonesians buying and selling safely. Our Rekening Bersama system ensures your money is safe until the transaction is complete.
+            Platform marketplace Indonesia dengan sistem Rekening Bersama (Escrow) — uang aman hingga barang diterima.
           </p>
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <ArrowRight className="w-4 h-4" />
+            {[
+              "Pembayaran 100% Aman via Escrow",
+              "Pengiriman ke Seluruh Indonesia",
+              "Terdaftar OSS · NIB 2403240017145",
+            ].map(text => (
+              <div key={text} className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <span className="font-medium">{text}</span>
               </div>
-              <span className="font-medium">100% Safe Payments</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <ArrowRight className="w-4 h-4" />
-              </div>
-              <span className="font-medium">Nationwide Delivery</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                <ArrowRight className="w-4 h-4" />
-              </div>
-              <span className="font-medium">Trusted by millions</span>
-            </div>
+            ))}
           </div>
         </div>
       </div>
