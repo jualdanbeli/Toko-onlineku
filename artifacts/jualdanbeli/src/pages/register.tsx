@@ -191,9 +191,9 @@ export default function Register() {
             </CardContent>
             <CardFooter className="flex flex-col gap-4 border-t pt-6 pb-2">
               <div className="text-sm text-center text-muted-foreground">
-                Already have an account?{" "}
+                Sudah punya akun?{" "}
                 <Link href="/login" className="text-primary font-semibold hover:underline">
-                  Log in
+                  Masuk
                 </Link>
               </div>
             </CardFooter>

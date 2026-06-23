@@ -19,20 +19,20 @@ export default function Home() {
       <section className="relative rounded-2xl overflow-hidden mb-12 bg-gradient-to-r from-primary to-orange-400 p-8 md:p-12 text-primary-foreground shadow-lg">
         <div className="relative z-10 max-w-2xl">
           <Badge variant="secondary" className="mb-6 bg-white/20 text-white hover:bg-white/30 border-none px-3 py-1 text-xs">
-            Trusted by 2M+ Users
+            Dipercaya 2 Juta+ Pengguna
           </Badge>
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
-            The vibrant digital pasar for all your needs
+            Jual & Beli Lebih Mudah, Aman, dan Terpercaya
           </h1>
           <p className="text-primary-foreground/90 text-lg mb-8 max-w-xl leading-relaxed">
-            Fast, secure, and authentic. Experience Indonesia's premier marketplace with built-in escrow protection and nationwide shipping.
+            Marketplace Indonesia dengan sistem Rekening Bersama (Escrow) — uang Anda aman hingga barang diterima.
           </p>
           <div className="flex flex-wrap gap-4">
             <Button size="lg" variant="secondary" className="font-semibold px-8" asChild>
-              <Link href="/products">Start Shopping</Link>
+              <Link href="/products">Mulai Belanja</Link>
             </Button>
             <Button size="lg" variant="outline" className="font-semibold px-8 bg-transparent text-white border-white hover:bg-white/10" asChild>
-              <Link href="/register">Become a Seller</Link>
+              <Link href="/register">Buka Toko</Link>
             </Button>
           </div>
         </div>
@@ -43,18 +43,43 @@ export default function Home() {
             <ShieldCheck className="w-8 h-8 text-white" />
             <div>
               <div className="font-bold text-sm">Rekening Bersama</div>
-              <div className="text-xs text-white/80">100% Safe Payments</div>
+              <div className="text-xs text-white/80">Pembayaran 100% Aman</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Categories */}
+      {/* Keunggulan Platform */}
+      <section className="mb-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="flex items-start gap-3 bg-orange-50 border border-orange-100 rounded-xl p-4">
+          <ShieldCheck className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="font-semibold text-sm">Rekening Bersama</p>
+            <p className="text-xs text-muted-foreground">Dana ditahan hingga barang diterima pembeli</p>
+          </div>
+        </div>
+        <div className="flex items-start gap-3 bg-orange-50 border border-orange-100 rounded-xl p-4">
+          <Truck className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="font-semibold text-sm">Pengiriman ke Seluruh Indonesia</p>
+            <p className="text-xs text-muted-foreground">JNE, J&T, SiCepat, Gojek, dan lebih banyak lagi</p>
+          </div>
+        </div>
+        <div className="flex items-start gap-3 bg-orange-50 border border-orange-100 rounded-xl p-4">
+          <Star className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="font-semibold text-sm">Penjual Terverifikasi</p>
+            <p className="text-xs text-muted-foreground">Semua penjual telah melalui proses verifikasi kami</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Kategori */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-foreground">Explore Categories</h2>
+          <h2 className="text-2xl font-bold text-foreground">Jelajahi Kategori</h2>
           <Button variant="ghost" asChild>
-            <Link href="/categories">View All</Link>
+            <Link href="/categories">Lihat Semua</Link>
           </Button>
         </div>
         
@@ -71,12 +96,11 @@ export default function Home() {
                 <Card className="hover:border-primary transition-colors cursor-pointer group hover-elevate">
                   <CardContent className="p-6 flex flex-col items-center justify-center text-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                      {/* Placeholder for icon - using initial */}
                       <span className="font-bold text-xl">{cat.name.charAt(0)}</span>
                     </div>
                     <div>
                       <h3 className="font-medium text-sm leading-tight group-hover:text-primary transition-colors">{cat.name}</h3>
-                      <p className="text-xs text-muted-foreground mt-1">{cat.productCount || 0} products</p>
+                      <p className="text-xs text-muted-foreground mt-1">{cat.productCount || 0} produk</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -86,17 +110,17 @@ export default function Home() {
         )}
       </section>
 
-      {/* Trending Products */}
+      {/* Produk Trending */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
               <Star className="w-4 h-4 text-red-500 fill-red-500" />
             </div>
-            <h2 className="text-2xl font-bold text-foreground">Trending Now</h2>
+            <h2 className="text-2xl font-bold text-foreground">Sedang Trending</h2>
           </div>
           <Button variant="ghost" asChild>
-            <Link href="/products?sort=popular">View All</Link>
+            <Link href="/products?sort=popular">Lihat Semua</Link>
           </Button>
         </div>
 
@@ -123,12 +147,12 @@ export default function Home() {
                         className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                        No Image
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                        Tidak ada gambar
                       </div>
                     )}
                     {product.condition === 'used' && (
-                      <Badge variant="secondary" className="absolute top-2 left-2 text-[10px]">Used</Badge>
+                      <Badge variant="secondary" className="absolute top-2 left-2 text-[10px]">Bekas</Badge>
                     )}
                   </div>
                   <CardContent className="p-4">
@@ -148,7 +172,7 @@ export default function Home() {
                         <span className="font-medium">{product.averageRating?.toFixed(1) || '0'}</span>
                       </div>
                       <span className="text-muted-foreground">|</span>
-                      <span className="text-muted-foreground">{product.totalSold || 0} sold</span>
+                      <span className="text-muted-foreground">{product.totalSold || 0} terjual</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -158,9 +182,9 @@ export default function Home() {
         )}
       </section>
       
-      {/* Featured Products */}
+      {/* Produk Pilihan */}
       <section className="mb-12">
-        <h2 className="text-2xl font-bold text-foreground mb-6">Recommended For You</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-6">Rekomendasi untuk Anda</h2>
         {loadingFeatured ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -183,8 +207,8 @@ export default function Home() {
                         className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                        No Image
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                        Tidak ada gambar
                       </div>
                     )}
                   </div>

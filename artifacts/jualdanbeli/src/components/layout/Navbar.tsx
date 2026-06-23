@@ -61,7 +61,7 @@ export function Navbar() {
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input 
-              placeholder="Search products, categories..." 
+              placeholder="Cari produk, kategori..." 
               className="w-full pl-9 bg-muted border-none"
             />
           </div>
@@ -105,10 +105,10 @@ export function Navbar() {
                 {user?.role === "buyer" && (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/orders" className="cursor-pointer">My Orders</Link>
+                      <Link href="/orders" className="cursor-pointer">Pesanan Saya</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/wallet" className="cursor-pointer">Wallet</Link>
+                      <Link href="/wallet" className="cursor-pointer">Dompet</Link>
                     </DropdownMenuItem>
                   </>
                 )}
@@ -116,13 +116,13 @@ export function Navbar() {
                 {user?.role === "seller" && (
                   <>
                     <DropdownMenuItem asChild>
-                      <Link href="/seller/dashboard" className="cursor-pointer">Seller Dashboard</Link>
+                      <Link href="/seller/dashboard" className="cursor-pointer">Dashboard Penjual</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/seller/products" className="cursor-pointer">My Products</Link>
+                      <Link href="/seller/products" className="cursor-pointer">Produk Saya</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/seller/orders" className="cursor-pointer">Shop Orders</Link>
+                      <Link href="/seller/orders" className="cursor-pointer">Pesanan Toko</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/seller/live" className="cursor-pointer">
@@ -130,14 +130,14 @@ export function Navbar() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/wallet" className="cursor-pointer">Wallet</Link>
+                      <Link href="/wallet" className="cursor-pointer">Dompet</Link>
                     </DropdownMenuItem>
                   </>
                 )}
 
                 {user?.role === "admin" && (
                   <DropdownMenuItem asChild>
-                    <Link href="/admin" className="cursor-pointer">Admin Dashboard</Link>
+                    <Link href="/admin" className="cursor-pointer">Dashboard Admin</Link>
                   </DropdownMenuItem>
                 )}
 
@@ -166,7 +166,7 @@ export function Navbar() {
 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/settings" className="cursor-pointer">Settings</Link>
+                  <Link href="/settings" className="cursor-pointer">Pengaturan</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
                   <LogOut className="w-4 h-4 mr-2" />
@@ -177,10 +177,10 @@ export function Navbar() {
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" asChild className="hidden sm:inline-flex">
-                <Link href="/login">Log in</Link>
+                <Link href="/login">Masuk</Link>
               </Button>
               <Button asChild>
-                <Link href="/register">Sign up</Link>
+                <Link href="/register">Daftar</Link>
               </Button>
             </div>
           )}
