@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Settings, DollarSign, Shield, Building2, FileText, Save } from "lucide-react";
+import { Settings, DollarSign, Shield, Building2, FileText, Save, Info } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 export default function PlatformSettingsPage() {
@@ -50,6 +50,9 @@ export default function PlatformSettingsPage() {
 
   const set = (key: string, value: any) => setForm(f => ({ ...f, [key]: value }));
 
+  const totalDeduction = (form.commissionRate ?? 1) + (form.umkmTaxRate ?? 0.5);
+  const sellerReceives = 100 - totalDeduction;
+
   if (isLoading) {
     return (
       <AdminLayout>
@@ -67,14 +70,37 @@ export default function PlatformSettingsPage() {
           <h1 className="text-2xl font-bold">Pengaturan Platform</h1>
           <p className="text-muted-foreground text-sm">Konfigurasi sistem marketplace jualdanbeli</p>
         </div>
-        <Button
-          onClick={() => saveMutation.mutate(form)}
-          disabled={saveMutation.isPending}
-          className="gap-2"
-        >
+        <Button onClick={() => saveMutation.mutate(form)} disabled={saveMutation.isPending} className="gap-2">
           <Save className="w-4 h-4" />
           {saveMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
         </Button>
+      </div>
+
+      {/* Ringkasan potongan penjual */}
+      <div className="mb-6 p-4 rounded-xl bg-orange-50 border border-orange-200">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-orange-600 mt-0.5 shrink-0" />
+          <div>
+            <p className="font-semibold text-orange-800 text-sm">Ringkasan Potongan per Transaksi Penjual</p>
+            <div className="mt-2 grid grid-cols-3 gap-4 text-sm">
+              <div className="text-center bg-white rounded-lg p-3 border border-orange-100">
+                <p className="text-2xl font-bold text-orange-600">{form.commissionRate ?? 1}%</p>
+                <p className="text-xs text-muted-foreground mt-1">Biaya Platform</p>
+              </div>
+              <div className="text-center bg-white rounded-lg p-3 border border-orange-100">
+                <p className="text-2xl font-bold text-blue-600">{form.umkmTaxRate ?? 0.5}%</p>
+                <p className="text-xs text-muted-foreground mt-1">Pajak UMKM (PPh Final)</p>
+              </div>
+              <div className="text-center bg-white rounded-lg p-3 border border-green-100">
+                <p className="text-2xl font-bold text-green-600">{sellerReceives.toFixed(1)}%</p>
+                <p className="text-xs text-muted-foreground mt-1">Diterima Penjual</p>
+              </div>
+            </div>
+            <p className="text-xs text-orange-700 mt-2">
+              Contoh: Penjualan Rp 100.000 → Biaya platform Rp {((form.commissionRate ?? 1) * 1000).toLocaleString("id-ID")} + Pajak UMKM Rp {((form.umkmTaxRate ?? 0.5) * 1000).toLocaleString("id-ID")} → Penjual menerima Rp {(sellerReceives * 1000).toLocaleString("id-ID")}
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -102,33 +128,36 @@ export default function PlatformSettingsPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <DollarSign className="w-5 h-5 text-primary" />
-              <CardTitle className="text-base">Komisi & Keuangan</CardTitle>
+              <CardTitle className="text-base">Biaya & Pajak Penjual</CardTitle>
             </div>
-            <CardDescription>Pengaturan fee dan bagi hasil platform</CardDescription>
+            <CardDescription>Potongan dari setiap transaksi penjual</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label>Komisi Platform (%)</Label>
+              <Label>Biaya Platform (%)</Label>
               <div className="flex items-center gap-2 mt-1">
                 <Input
                   type="number" min="0" max="30" step="0.5"
-                  value={form.commissionRate ?? 3}
+                  value={form.commissionRate ?? 1}
                   onChange={e => set("commissionRate", parseFloat(e.target.value))}
                 />
                 <span className="text-sm text-muted-foreground">%</span>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Persentase dari setiap transaksi yang masuk ke platform</p>
+              <p className="text-xs text-muted-foreground mt-1">Pendapatan platform dari setiap transaksi</p>
             </div>
             <div>
-              <Label>Pajak Komisi (PPN %)</Label>
+              <Label>Pajak UMKM — PPh Final (%)</Label>
               <div className="flex items-center gap-2 mt-1">
                 <Input
-                  type="number" min="0" max="20"
-                  value={form.taxRate ?? 11}
-                  onChange={e => set("taxRate", parseFloat(e.target.value))}
+                  type="number" min="0" max="5" step="0.1"
+                  value={form.umkmTaxRate ?? 0.5}
+                  onChange={e => set("umkmTaxRate", parseFloat(e.target.value))}
                 />
                 <span className="text-sm text-muted-foreground">%</span>
               </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Berdasarkan <strong>PP No. 23 Tahun 2018</strong> — 0,5% dari omzet bruto untuk UMKM dengan omzet &lt; Rp 4,8 miliar/tahun. Wajib disetorkan ke DJP.
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -213,12 +242,7 @@ export default function PlatformSettingsPage() {
       </div>
 
       <div className="mt-6 flex justify-end">
-        <Button
-          size="lg"
-          onClick={() => saveMutation.mutate(form)}
-          disabled={saveMutation.isPending}
-          className="gap-2"
-        >
+        <Button size="lg" onClick={() => saveMutation.mutate(form)} disabled={saveMutation.isPending} className="gap-2">
           <Save className="w-4 h-4" />
           {saveMutation.isPending ? "Menyimpan..." : "Simpan Semua Perubahan"}
         </Button>

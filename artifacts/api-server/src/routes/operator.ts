@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { db, ordersTable, usersTable, productsTable, transactionsTable } from "@workspace/db";
+import { db, ordersTable, usersTable, transactionsTable } from "@workspace/db";
 import { eq, sql, desc, and, gte, between } from "drizzle-orm";
 import { requireAdmin } from "../lib/auth";
 import { readFileSync, writeFileSync, existsSync } from "fs";
@@ -11,13 +11,13 @@ const SETTINGS_FILE = join(process.cwd(), "platform-settings.json");
 
 const DEFAULT_SETTINGS = {
   platformName: "jualdanbeli",
-  commissionRate: 3,
+  commissionRate: 1,
+  umkmTaxRate: 0.5,
   maxWithdrawalAmount: 50000000,
   minWithdrawalAmount: 50000,
   autoReleaseEscrowDays: 7,
   maintenanceMode: false,
   contactEmail: "admin@jualdanbeli.com",
-  taxRate: 11,
 };
 
 function loadSettings() {
@@ -29,7 +29,7 @@ function loadSettings() {
   return { ...DEFAULT_SETTINGS };
 }
 
-function saveSettings(settings: typeof DEFAULT_SETTINGS) {
+function saveSettings(settings: Record<string, any>) {
   try { writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2)); } catch {}
 }
 
@@ -42,6 +42,7 @@ router.get("/admin/analytics", requireAdmin, async (req, res): Promise<void> => 
 
   const settings = loadSettings();
   const commissionRate = settings.commissionRate / 100;
+  const umkmTaxRate = settings.umkmTaxRate / 100;
 
   const revenueRows = await db
     .select({
@@ -74,17 +75,18 @@ router.get("/admin/analytics", requireAdmin, async (req, res): Promise<void> => 
     .groupBy(sql`to_char(${usersTable.createdAt}, 'YYYY-MM-DD')`)
     .orderBy(sql`to_char(${usersTable.createdAt}, 'YYYY-MM-DD')`);
 
-  const dateMap: Record<string, { date: string; revenue: number; commission: number; orders: number; newUsers: number }> = {};
+  const dateMap: Record<string, { date: string; revenue: number; commission: number; umkmTax: number; orders: number; newUsers: number }> = {};
   for (let i = days - 1; i >= 0; i--) {
     const d = new Date(); d.setDate(d.getDate() - i);
     const key = d.toISOString().split("T")[0];
-    dateMap[key] = { date: key, revenue: 0, commission: 0, orders: 0, newUsers: 0 };
+    dateMap[key] = { date: key, revenue: 0, commission: 0, umkmTax: 0, orders: 0, newUsers: 0 };
   }
 
   for (const r of revenueRows) {
     if (dateMap[r.date]) {
       dateMap[r.date].revenue = r.revenue;
       dateMap[r.date].commission = Math.round(r.revenue * commissionRate);
+      dateMap[r.date].umkmTax = Math.round(r.revenue * umkmTaxRate);
       dateMap[r.date].orders = r.orders;
     }
   }
@@ -107,6 +109,7 @@ router.get("/admin/analytics", requireAdmin, async (req, res): Promise<void> => 
 
   const totalRevenue = completedOrders.revenue || 0;
   const totalCommission = Math.round(totalRevenue * commissionRate);
+  const totalUmkmTax = Math.round(totalRevenue * umkmTaxRate);
 
   const topSellers = await db
     .select({
@@ -136,8 +139,11 @@ router.get("/admin/analytics", requireAdmin, async (req, res): Promise<void> => 
       completedOrders: completedOrders.count,
       totalRevenue,
       totalCommission,
+      totalUmkmTax,
+      totalDeductions: totalCommission + totalUmkmTax,
       pendingWithdrawals: pendingTxs.total || 0,
       commissionRate: settings.commissionRate,
+      umkmTaxRate: settings.umkmTaxRate,
     },
     topSellers: topSellers.map(s => ({
       sellerId: s.sellerId,
@@ -145,6 +151,8 @@ router.get("/admin/analytics", requireAdmin, async (req, res): Promise<void> => 
       totalSales: s.totalSales,
       orderCount: s.orderCount,
       commission: Math.round(s.totalSales * commissionRate),
+      umkmTax: Math.round(s.totalSales * umkmTaxRate),
+      sellerReceives: Math.round(s.totalSales * (1 - commissionRate - umkmTaxRate)),
     })),
   });
 });
@@ -165,6 +173,7 @@ router.get("/admin/financial-report", requireAdmin, async (req, res): Promise<vo
   const { from, to } = req.query;
   const settings = loadSettings();
   const commissionRate = settings.commissionRate / 100;
+  const umkmTaxRate = settings.umkmTaxRate / 100;
 
   const fromDate = from ? new Date(from as string) : (() => { const d = new Date(); d.setMonth(d.getMonth() - 1); return d; })();
   const toDate = to ? new Date(to as string) : new Date();
@@ -185,20 +194,30 @@ router.get("/admin/financial-report", requireAdmin, async (req, res): Promise<vo
   const totalOrders = orders.reduce((s, o) => s + o.count, 0);
   const totalShipping = orders.reduce((s, o) => s + o.shipping, 0);
   const totalCommission = Math.round(totalRevenue * commissionRate);
-  const tax = Math.round(totalCommission * settings.taxRate / 100);
+  const totalUmkmTax = Math.round(totalRevenue * umkmTaxRate);
 
   res.json({
     period: { from: fromDate.toISOString().split("T")[0], to: toDate.toISOString().split("T")[0] },
-    summary: { totalRevenue, totalOrders, totalShipping, totalCommission, tax, netCommission: totalCommission - tax },
+    summary: {
+      totalRevenue,
+      totalOrders,
+      totalShipping,
+      totalCommission,
+      totalUmkmTax,
+      totalDeductions: totalCommission + totalUmkmTax,
+      netToSellers: Math.round(totalRevenue - totalCommission - totalUmkmTax),
+    },
     rows: orders.map(o => ({
       date: o.date,
       orders: o.count,
       revenue: o.revenue,
       shipping: o.shipping,
       commission: Math.round(o.revenue * commissionRate),
+      umkmTax: Math.round(o.revenue * umkmTaxRate),
+      sellerReceives: Math.round(o.revenue * (1 - commissionRate - umkmTaxRate)),
     })),
     commissionRate: settings.commissionRate,
-    taxRate: settings.taxRate,
+    umkmTaxRate: settings.umkmTaxRate,
   });
 });
 
