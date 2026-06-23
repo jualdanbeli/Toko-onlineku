@@ -241,6 +241,52 @@ export default function ProfileScreen() {
           </>
         )}
 
+        {displayUser?.role === "admin" && (
+          <>
+            <Text style={s.sectionTitle}>Panel Admin</Text>
+            <Pressable
+              style={({ pressed }) => ({
+                flexDirection: "row", alignItems: "center",
+                paddingVertical: 14, paddingHorizontal: 16,
+                backgroundColor: pressed ? "#1e293b" : "#0f172a",
+                borderBottomWidth: 1, borderBottomColor: "#1e293b",
+                gap: 14,
+              })}
+              onPress={() => router.push("/(admin)" as any)}
+            >
+              <View style={{
+                width: 36, height: 36, borderRadius: 10,
+                backgroundColor: "rgba(255,255,255,0.15)",
+                alignItems: "center", justifyContent: "center",
+              }}>
+                <Feather name="shield" size={18} color="#fff" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 15, fontFamily: "Inter_600SemiBold", color: "#fff" }}>
+                  Buka Panel Admin
+                </Text>
+                <Text style={{ fontSize: 12, fontFamily: "Inter_400Regular", color: "rgba(255,255,255,0.6)", marginTop: 1 }}>
+                  Dashboard, pengguna, pesanan, laporan
+                </Text>
+              </View>
+              <View style={{
+                backgroundColor: "#22c55e", width: 8, height: 8, borderRadius: 4, marginRight: 6,
+              }} />
+              <Feather name="chevron-right" size={16} color="rgba(255,255,255,0.5)" />
+            </Pressable>
+            <MenuItem
+              icon="activity"
+              label="Monitoring Realtime"
+              onPress={() => router.push("/(admin)/monitoring" as any)}
+            />
+            <MenuItem
+              icon="users"
+              label="Kelola Pengguna"
+              onPress={() => router.push("/(admin)/users" as any)}
+            />
+          </>
+        )}
+
         <Text style={s.sectionTitle}>Bantuan</Text>
         <MenuItem icon="help-circle" label="Pusat Bantuan" onPress={() => {}} />
         <MenuItem icon="message-circle" label="Hubungi CS" onPress={() => {}} />

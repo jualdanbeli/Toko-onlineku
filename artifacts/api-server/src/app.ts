@@ -39,6 +39,8 @@ const ALLOWED_ORIGINS = [
   /^https:\/\/jual-beli-aman\.replit\.app$/,
   /^https:\/\/.*\.replit\.app$/,
   /^https:\/\/.*\.repl\.co$/,
+  /^https:\/\/.*\.replit\.dev$/,
+  /^https:\/\/.*\.pike\.replit\.dev$/,
   /^http:\/\/localhost(:\d+)?$/,
   /^http:\/\/127\.0\.0\.1(:\d+)?$/,
 ];
