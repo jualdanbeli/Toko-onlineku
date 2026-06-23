@@ -50,5 +50,5 @@ channel = "stable-25_05"
 
 [userenv.shared]
 APP_URL = "https://jual-beli-aman.replit.app"
-MIDTRANS_IS_PRODUCTION = "false"
+MIDTRANS_IS_PRODUCTION = "true"
 FROM_EMAIL = "noreply@jualdanbeli.com"
