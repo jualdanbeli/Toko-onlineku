@@ -35,3 +35,9 @@ id = "W1tgGeyZpI4MBwcLWZQHp"
 uri = "file://jualdanbeli-FULL.zip"
 type = "unspecified"
 title = "jualdanbeli — Paket Lengkap untuk Replit Baru (12 MB)"
+
+[[outputs]]
+id = "-O6tctWo2p0kxHjA2UxkL"
+uri = "file://jualdanbeli-STANDALONE.zip"
+type = "unspecified"
+title = "jualdanbeli — Standalone (tanpa Replit) — 24 MB"

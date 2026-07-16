@@ -16,6 +16,18 @@ services:
       timeout: 5s
       retries: 5
 
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    command: ["node", "-e", "require('./artifacts/api-server/dist/migrate.mjs')"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://jualdanbeli:${DB_PASSWORD:-changeme123}@db:5432/jualdanbeli
+    restart: "no"
+
   api:
     build:
       context: .
@@ -24,6 +36,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     environment:
       NODE_ENV: production
       PORT: 8080
@@ -35,8 +49,6 @@ services:
       RAJAONGKIR_API_KEY: ${RAJAONGKIR_API_KEY}
       RESEND_API_KEY: ${RESEND_API_KEY}
       APP_URL: ${APP_URL:-http://localhost}
-      DEFAULT_OBJECT_STORAGE_BUCKET_ID: ${DEFAULT_OBJECT_STORAGE_BUCKET_ID:-}
-      PUBLIC_OBJECT_SEARCH_PATHS: ${PUBLIC_OBJECT_SEARCH_PATHS:-}
       PRIVATE_OBJECT_DIR: ${PRIVATE_OBJECT_DIR:-/app/uploads}
     volumes:
       - uploads_data:/app/uploads
