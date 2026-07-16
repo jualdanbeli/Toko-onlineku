@@ -37,6 +37,7 @@ import { useState } from "react";
 
 const NAV_CATEGORIES = [
   { label: "Flash Sale", href: "/products?sort=popular", icon: "⚡", hot: true },
+  { label: "Bayar Tagihan", href: "/pembayaran", icon: "💳", highlight: true },
   { label: "Elektronik", href: "/products?categoryId=1", icon: "📱" },
   { label: "Fashion", href: "/products?categoryId=2", icon: "👗" },
   { label: "Rumah & Dapur", href: "/products?categoryId=3", icon: "🏠" },
@@ -269,6 +270,8 @@ export function Navbar() {
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors shrink-0 ${
                   cat.hot
                     ? "text-red-600 hover:bg-red-50 font-semibold"
+                    : (cat as any).highlight
+                    ? "text-blue-700 hover:bg-blue-50 font-semibold"
                     : "text-gray-700 hover:bg-gray-50 hover:text-primary"
                 }`}
               >

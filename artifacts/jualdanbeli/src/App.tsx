@@ -55,6 +55,7 @@ import LivePage from "@/pages/live/index";
 import WatchLive from "@/pages/live/watch";
 import SellerLive from "@/pages/seller/live";
 import ShippingProtection from "@/pages/shipping-protection";
+import Pembayaran from "@/pages/pembayaran";
 
 // Global 401/403 handler — auto-logout bila token expired atau diblokir
 const queryClient = new QueryClient({
@@ -136,6 +137,7 @@ function Router() {
       <Route path="/live/:id" component={WatchLive} />
       <Route path="/seller/live" component={SellerLive} />
       <Route path="/shipping-protection" component={ShippingProtection} />
+      <Route path="/pembayaran" component={Pembayaran} />
 
       <Route component={NotFound} />
     </Switch>

@@ -12,3 +12,4 @@ export * from "./wishlist";
 export * from "./vouchers";
 export * from "./live";
 export * from "./ban-logs";
+export * from "./bills";

@@ -20,6 +20,7 @@ import vouchersRouter from "./vouchers";
 import liveRouter from "./live";
 import moderationRouter from "./moderation";
 import operatorRouter from "./operator";
+import billsRouter from "./bills";
 
 const router: IRouter = Router();
 
@@ -44,5 +45,6 @@ router.use(vouchersRouter);
 router.use(liveRouter);
 router.use(moderationRouter);
 router.use(operatorRouter);
+router.use(billsRouter);
 
 export default router;
