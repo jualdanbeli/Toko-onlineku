@@ -23,3 +23,9 @@ id = "2yFHLmxtBwERqdYVe_xTo"
 uri = "file://jualdanbeli-source.tar.gz"
 type = "unspecified"
 title = "jualdanbeli — Source Code (tar.gz)"
+
+[[outputs]]
+id = "gyPHDaMv1gAQkZsH0h-bC"
+uri = "file://jualdanbeli.zip"
+type = "unspecified"
+title = "jualdanbeli — Source Code (.zip)"
