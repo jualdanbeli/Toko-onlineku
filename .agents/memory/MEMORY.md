@@ -1,0 +1,2 @@
+- [Orval codegen index.ts conflict](orval-codegen-fix.md) — Orval regenerates api-zod index.ts with types/ export; fix via patch node script in codegen npm script
+- [Dispute schema fields](dispute-schema.md) — disputes table has: disputeType, courierName, trackingNumber, escalatedToCourier, escalatedAt, insuranceClaimStatus, insuranceClaimId, insuranceAmount

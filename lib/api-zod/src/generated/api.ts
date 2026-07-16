@@ -952,6 +952,9 @@ export const GetOrdersResponseItem = zod.object({
   "trackingNumber": zod.string().nullish(),
   "escalatedToCourier": zod.string().nullish(),
   "escalatedAt": zod.coerce.date().nullish(),
+  "insuranceClaimStatus": zod.string().nullish(),
+  "insuranceClaimId": zod.string().nullish(),
+  "insuranceAmount": zod.string().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1054,6 +1057,9 @@ export const GetOrderResponse = zod.object({
   "trackingNumber": zod.string().nullish(),
   "escalatedToCourier": zod.string().nullish(),
   "escalatedAt": zod.coerce.date().nullish(),
+  "insuranceClaimStatus": zod.string().nullish(),
+  "insuranceClaimId": zod.string().nullish(),
+  "insuranceAmount": zod.string().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1146,6 +1152,9 @@ export const UpdateOrderStatusResponse = zod.object({
   "trackingNumber": zod.string().nullish(),
   "escalatedToCourier": zod.string().nullish(),
   "escalatedAt": zod.coerce.date().nullish(),
+  "insuranceClaimStatus": zod.string().nullish(),
+  "insuranceClaimId": zod.string().nullish(),
+  "insuranceAmount": zod.string().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1232,6 +1241,9 @@ export const ConfirmOrderReceivedResponse = zod.object({
   "trackingNumber": zod.string().nullish(),
   "escalatedToCourier": zod.string().nullish(),
   "escalatedAt": zod.coerce.date().nullish(),
+  "insuranceClaimStatus": zod.string().nullish(),
+  "insuranceClaimId": zod.string().nullish(),
+  "insuranceAmount": zod.string().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1915,6 +1927,9 @@ export const AdminGetOrdersResponseItem = zod.object({
   "trackingNumber": zod.string().nullish(),
   "escalatedToCourier": zod.string().nullish(),
   "escalatedAt": zod.coerce.date().nullish(),
+  "insuranceClaimStatus": zod.string().nullish(),
+  "insuranceClaimId": zod.string().nullish(),
+  "insuranceAmount": zod.string().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1938,6 +1953,9 @@ export const AdminGetDisputesResponseItem = zod.object({
   "trackingNumber": zod.string().nullish(),
   "escalatedToCourier": zod.string().nullish(),
   "escalatedAt": zod.coerce.date().nullish(),
+  "insuranceClaimStatus": zod.string().nullish(),
+  "insuranceClaimId": zod.string().nullish(),
+  "insuranceAmount": zod.string().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()
@@ -1967,6 +1985,9 @@ export const AdminResolveDisputeResponse = zod.object({
   "trackingNumber": zod.string().nullish(),
   "escalatedToCourier": zod.string().nullish(),
   "escalatedAt": zod.coerce.date().nullish(),
+  "insuranceClaimStatus": zod.string().nullish(),
+  "insuranceClaimId": zod.string().nullish(),
+  "insuranceAmount": zod.string().nullish(),
   "status": zod.enum(['open', 'investigating', 'resolved_buyer', 'resolved_seller', 'closed']),
   "ruling": zod.string().nullish(),
   "createdAt": zod.coerce.date()

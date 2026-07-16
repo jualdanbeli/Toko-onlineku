@@ -404,9 +404,30 @@ export default function OrderDetail() {
                   </Badge>
                 </div>
                 {order.dispute.escalatedToCourier === "pending" && (
-                  <div className="mt-3 p-3 bg-orange-50 border border-orange-200 rounded-lg text-orange-800 text-xs">
+                  <div className="mt-2 p-3 bg-orange-50 border border-orange-200 rounded-lg text-orange-800 text-xs">
                     <Phone className="w-3.5 h-3.5 inline mr-1" />
                     <strong>Eskalasi ke kurir sedang diproses</strong> — manajemen {order.dispute.courierName || "kurir"} akan dihubungi dalam 1×24 jam.
+                  </div>
+                )}
+                {order.dispute.insuranceClaimStatus && order.dispute.insuranceClaimStatus !== "none" && (
+                  <div className={`mt-2 p-3 rounded-lg text-xs border ${
+                    order.dispute.insuranceClaimStatus === "approved"
+                      ? "bg-green-50 border-green-200 text-green-800"
+                      : order.dispute.insuranceClaimStatus === "rejected"
+                      ? "bg-red-50 border-red-200 text-red-800"
+                      : "bg-blue-50 border-blue-200 text-blue-800"
+                  }`}>
+                    <ShieldCheck className="w-3.5 h-3.5 inline mr-1" />
+                    <strong>Klaim Asuransi Pengiriman</strong>
+                    {order.dispute.insuranceClaimId && (
+                      <span className="ml-1 font-mono opacity-75">({order.dispute.insuranceClaimId})</span>
+                    )}
+                    <span className="ml-1">—</span>
+                    <span className="ml-1">
+                      {order.dispute.insuranceClaimStatus === "pending" && "Diajukan ke operator kurir, menunggu respons"}
+                      {order.dispute.insuranceClaimStatus === "approved" && "✅ Disetujui — dana asuransi akan diproses"}
+                      {order.dispute.insuranceClaimStatus === "rejected" && "Ditolak oleh kurir — admin akan meninjau ulang"}
+                    </span>
                   </div>
                 )}
                 <div className="mt-3 pt-3 border-t border-amber-200">

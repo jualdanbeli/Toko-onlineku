@@ -291,6 +291,12 @@ export interface Dispute {
   escalatedToCourier?: string | null;
   /** @nullable */
   escalatedAt?: string | null;
+  /** @nullable */
+  insuranceClaimStatus?: string | null;
+  /** @nullable */
+  insuranceClaimId?: string | null;
+  /** @nullable */
+  insuranceAmount?: string | null;
   status: DisputeStatus;
   /** @nullable */
   ruling?: string | null;

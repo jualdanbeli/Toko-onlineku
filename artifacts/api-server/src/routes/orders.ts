@@ -231,8 +231,14 @@ router.post("/orders/:orderId/dispute", requireAuth, async (req, res): Promise<v
   }
 
   const isCourierIssue = disputeType === "paket_tidak_sampai" || disputeType === "kurir_nakal" || disputeType === "paket_hilang";
+  const isInsuranceEligible = disputeType === "kurir_nakal" || disputeType === "paket_hilang" || disputeType === "paket_rusak";
   const resolvedTrackingNumber = trackingNumber || order.trackingNumber;
   const resolvedCourierName = courierName || (order.courierId ? String(order.courierId) : null);
+
+  // Auto-generate insurance claim ID for eligible cases
+  const insuranceClaimId = isInsuranceEligible
+    ? `JDB-INS-${orderId}-${Date.now()}`
+    : null;
 
   const [newDispute] = await db.insert(disputesTable).values({
     orderId,
@@ -243,6 +249,9 @@ router.post("/orders/:orderId/dispute", requireAuth, async (req, res): Promise<v
     trackingNumber: resolvedTrackingNumber,
     escalatedToCourier: isCourierIssue ? "pending" : "no",
     escalatedAt: isCourierIssue ? new Date() : null,
+    insuranceClaimStatus: isInsuranceEligible ? "pending" : "none",
+    insuranceClaimId,
+    insuranceAmount: isInsuranceEligible ? order.totalAmount : null,
     status: "open",
   }).returning();
 
@@ -265,9 +274,11 @@ router.post("/orders/:orderId/dispute", requireAuth, async (req, res): Promise<v
   await db.insert(notificationsTable).values({
     userId: order.buyerId,
     type: "dispute",
-    title: "Laporan pengiriman diterima",
-    body: `Laporan untuk pesanan #${orderId} sedang diproses. Tim kami akan menghubungi Anda dalam 1×24 jam.`,
-    metadata: { orderId },
+    title: isInsuranceEligible ? "Klaim asuransi pengiriman diajukan" : "Laporan pengiriman diterima",
+    body: isInsuranceEligible
+      ? `Laporan pesanan #${orderId} diterima. Klaim asuransi (${insuranceClaimId}) telah diajukan ke kurir dan akan diproses dalam 1×24 jam.`
+      : `Laporan untuk pesanan #${orderId} sedang diproses. Tim kami akan menghubungi Anda dalam 1×24 jam.`,
+    metadata: { orderId, insuranceClaimId },
   });
 
   // Send email notifications

@@ -1855,6 +1855,12 @@ components:
         escalatedAt:
           type: ["string", "null"]
           format: date-time
+        insuranceClaimStatus:
+          type: ["string", "null"]
+        insuranceClaimId:
+          type: ["string", "null"]
+        insuranceAmount:
+          type: ["string", "null"]
         status:
           type: string
           enum: [open, investigating, resolved_buyer, resolved_seller, closed]

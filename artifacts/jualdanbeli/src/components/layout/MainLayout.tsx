@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Navbar } from "./Navbar";
 import { Link } from "wouter";
-import { ShieldCheck, Truck, HeadphonesIcon, CreditCard } from "lucide-react";
+import { ShieldCheck, Truck, HeadphonesIcon, CreditCard, Clock, Shield, AlertCircle } from "lucide-react";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -10,6 +10,40 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col bg-muted/30">
+      {/* 24/7 Service Status Bar */}
+      <div className="bg-primary text-primary-foreground text-xs py-1.5 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4 overflow-x-auto whitespace-nowrap">
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+              </span>
+              Layanan Aktif 24/7
+            </span>
+            <span className="hidden sm:flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3" /> Escrow Aktif
+            </span>
+            <span className="hidden md:flex items-center gap-1">
+              <Shield className="w-3 h-3" /> Asuransi Pengiriman
+            </span>
+            <span className="hidden md:flex items-center gap-1">
+              <AlertCircle className="w-3 h-3" /> Perlindungan Kurir Nakal
+            </span>
+          </div>
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <Link href="/shipping-protection" className="flex items-center gap-1 hover:underline opacity-90 hover:opacity-100">
+              <ShieldCheck className="w-3 h-3" />
+              <span className="hidden sm:inline">Garansi Pengiriman</span>
+            </Link>
+            <Link href="/support" className="flex items-center gap-1 hover:underline opacity-90 hover:opacity-100">
+              <HeadphonesIcon className="w-3 h-3" />
+              <span className="hidden sm:inline">Bantuan CS</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
       <Navbar />
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-8">
         {children}
@@ -24,7 +58,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               <span className="font-bold text-lg text-gray-900">jualdanbeli</span>
             </div>
             <p className="text-sm text-muted-foreground mb-3">
-              Marketplace terpercaya Indonesia. Transaksi aman, cepat, dan terlindungi sistem Rekening Bersama.
+              Marketplace terpercaya Indonesia. Transaksi aman, cepat, dan terlindungi sistem Rekening Bersama dengan asuransi pengiriman.
             </p>
             <p className="text-xs text-muted-foreground">
               jualdanbeli — Usaha Perseorangan<br />
@@ -46,10 +80,20 @@ export function MainLayout({ children }: MainLayoutProps) {
           <div>
             <h3 className="font-semibold mb-4 text-foreground">Bantuan & Legal</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>
+                <Link href="/support" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                  </span>
+                  CS Online 24/7
+                </Link>
+              </li>
+              <li><Link href="/shipping-protection" className="hover:text-primary transition-colors">Garansi Pengiriman</Link></li>
               <li><Link href="/about" className="hover:text-primary transition-colors">Tentang Kami</Link></li>
               <li><Link href="/terms" className="hover:text-primary transition-colors">Syarat & Ketentuan</Link></li>
               <li><Link href="/privacy" className="hover:text-primary transition-colors">Kebijakan Privasi</Link></li>
-              <li><a href="mailto:cs@jualdanbeli.com" className="hover:text-primary transition-colors">Hubungi Kami</a></li>
+              <li><a href="mailto:cs@jualdanbeli.com" className="hover:text-primary transition-colors">cs@jualdanbeli.com</a></li>
             </ul>
           </div>
 
@@ -69,9 +113,13 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <span className="text-[10px] font-medium">CS 24/7</span>
               </div>
               <div className="flex flex-col items-center p-3 bg-muted rounded-lg text-center">
-                <CreditCard className="w-5 h-5 text-green-500 mb-1" />
-                <span className="text-[10px] font-medium">Dompet Digital</span>
+                <Shield className="w-5 h-5 text-green-500 mb-1" />
+                <span className="text-[10px] font-medium">Asuransi Kurir</span>
               </div>
+            </div>
+            <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
+              <span className="text-[10px] text-green-700 font-medium">Layanan aktif 24 jam / 7 hari seminggu</span>
             </div>
           </div>
         </div>
@@ -81,7 +129,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           <div className="flex gap-4">
             <Link href="/terms" className="hover:text-primary transition-colors">Syarat & Ketentuan</Link>
             <Link href="/privacy" className="hover:text-primary transition-colors">Kebijakan Privasi</Link>
-            <Link href="/about" className="hover:text-primary transition-colors">Tentang Kami</Link>
+            <Link href="/shipping-protection" className="hover:text-primary transition-colors">Garansi Pengiriman</Link>
           </div>
         </div>
       </footer>

@@ -48,6 +48,13 @@ const PROTECTIONS = [
   },
 ];
 
+const INSURANCE_CASES = [
+  { case: "Kurir Nakal / Pencurian", cov: "100% nilai barang", process: "Otomatis ke operator kurir", icon: "🚨" },
+  { case: "Paket Hilang (> 14 hari)", cov: "100% nilai barang", process: "Otomatis ke operator kurir", icon: "🔍" },
+  { case: "Paket Rusak Saat Tiba", cov: "Sesuai kerusakan", process: "Diajukan ke kurir", icon: "💔" },
+  { case: "Paket Tidak Sampai (< 14 hari)", cov: "Refund penuh (escrow)", process: "Internal jualdanbeli", icon: "📦" },
+];
+
 const STEPS = [
   { step: "1", title: "Laporkan Masalah", desc: "Buka pesanan dan klik 'Laporkan Masalah Pengiriman'. Isi form dengan jenis masalah, kurir, dan nomor resi.", icon: FileText },
   { step: "2", title: "Verifikasi Admin (1×24 jam)", desc: "Tim admin jualdanbeli memverifikasi laporan dan menghubungi perusahaan kurir untuk klarifikasi.", icon: Clock },
@@ -135,6 +142,78 @@ export default function ShippingProtection() {
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* 24/7 Service */}
+      <div className="mb-12 p-6 rounded-2xl bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200">
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <div className="flex-shrink-0 w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center">
+            <Clock className="w-8 h-8 text-indigo-600" />
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <h2 className="text-xl font-bold mb-1">Layanan 24 Jam / 7 Hari</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              jualdanbeli beroperasi nonstop setiap hari — tidak ada hari libur. Tim admin dan CS kami siap membantu
+              laporan pengiriman, sengketa, dan klaim asuransi kapan pun Anda butuhkan.
+            </p>
+          </div>
+          <div className="flex gap-4 flex-shrink-0">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-indigo-600">24</p>
+              <p className="text-xs text-muted-foreground">jam/hari</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-indigo-600">7</p>
+              <p className="text-xs text-muted-foreground">hari/minggu</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-indigo-600">365</p>
+              <p className="text-xs text-muted-foreground">hari/tahun</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Insurance Program */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold mb-2">Program Asuransi Pengiriman</h2>
+        <p className="text-muted-foreground mb-6">
+          Untuk kasus tertentu (kurir nakal, paket hilang, paket rusak), jualdanbeli <strong>secara otomatis mengajukan
+          klaim asuransi</strong> kepada operator kurir atas nama pembeli. Anda tidak perlu urus sendiri.
+        </p>
+        <div className="overflow-hidden rounded-xl border mb-4">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50">
+              <tr>
+                <th className="text-left p-4 font-semibold">Kasus</th>
+                <th className="text-left p-4 font-semibold">Cakupan Asuransi</th>
+                <th className="text-left p-4 font-semibold">Proses Klaim</th>
+              </tr>
+            </thead>
+            <tbody>
+              {INSURANCE_CASES.map((c) => (
+                <tr key={c.case} className="border-t">
+                  <td className="p-4 flex items-center gap-2">
+                    <span>{c.icon}</span>
+                    <span className="text-muted-foreground">{c.case}</span>
+                  </td>
+                  <td className="p-4 text-green-700 font-medium">{c.cov}</td>
+                  <td className="p-4 text-muted-foreground">{c.process}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800">
+          <p className="font-semibold mb-1">ℹ️ Cara Kerja Klaim Asuransi Otomatis</p>
+          <ol className="list-decimal list-inside space-y-1 text-blue-700">
+            <li>Anda melaporkan masalah melalui halaman pesanan (pilih jenis: kurir nakal / paket hilang / paket rusak)</li>
+            <li>Sistem <strong>otomatis membuat nomor klaim asuransi (JDB-INS-xxxxx)</strong> dan mengirimkannya ke operator kurir</li>
+            <li>Operator kurir wajib merespons dalam <strong>3–5 hari kerja</strong></li>
+            <li>Jika disetujui, dana asuransi masuk ke dompet jualdanbeli Anda</li>
+            <li>Jika ditolak kurir, admin jualdanbeli meninjau ulang dan dapat memberikan kompensasi langsung</li>
+          </ol>
         </div>
       </div>
 
