@@ -29,3 +29,9 @@ id = "gyPHDaMv1gAQkZsH0h-bC"
 uri = "file://jualdanbeli.zip"
 type = "unspecified"
 title = "jualdanbeli — Source Code (.zip)"
+
+[[outputs]]
+id = "W1tgGeyZpI4MBwcLWZQHp"
+uri = "file://jualdanbeli-FULL.zip"
+type = "unspecified"
+title = "jualdanbeli — Paket Lengkap untuk Replit Baru (12 MB)"
