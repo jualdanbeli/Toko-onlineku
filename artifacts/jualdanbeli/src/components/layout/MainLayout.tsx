@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Navbar } from "./Navbar";
 import { Link } from "wouter";
+import { JDBLogo } from "@/components/JDBLogo";
 import { ShieldCheck, Truck, HeadphonesIcon, CreditCard, Clock, Shield, AlertCircle } from "lucide-react";
 
 interface MainLayoutProps {
@@ -51,11 +52,8 @@ export function MainLayout({ children }: MainLayoutProps) {
       <footer className="bg-white border-t py-12 mt-auto">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="bg-primary text-primary-foreground p-1 rounded-lg">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
-              <span className="font-bold text-lg text-gray-900">jualdanbeli</span>
+            <div className="flex items-center gap-2 mb-4 bg-gray-900 rounded-xl px-3 py-2 w-fit">
+              <JDBLogo size="sm" variant="full" />
             </div>
             <p className="text-sm text-muted-foreground mb-3">
               Marketplace terpercaya Indonesia. Transaksi aman, cepat, dan terlindungi sistem Rekening Bersama dengan asuransi pengiriman.

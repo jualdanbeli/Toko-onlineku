@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
+import { JDBLogo } from "@/components/JDBLogo";
 import {
   LayoutDashboard, Users, Package, ShoppingBag, AlertTriangle,
   ArrowLeft, LogOut, FileWarning, WalletCards, HeadphonesIcon,
@@ -89,11 +90,9 @@ export function AdminLayout({ children }: { children: ReactNode }) {
       {/* Sidebar */}
       <aside className="w-64 bg-[#0f172a] text-slate-300 flex-shrink-0 hidden md:flex flex-col">
         {/* Logo */}
-        <div className="h-16 border-b border-slate-800 flex items-center px-5 gap-3">
-          <div className="bg-primary text-white p-1.5 rounded-lg">
-            <ShieldAlert className="w-5 h-5" />
-          </div>
-          <div>
+        <div className="h-16 border-b border-slate-800 flex items-center px-4 gap-3">
+          <JDBLogo size="sm" variant="icon" />
+          <div className="flex-1 min-w-0">
             <div className="font-bold text-white text-sm tracking-wide">Admin Portal</div>
             <div className="text-[10px] text-slate-500">jualdanbeli operator</div>
           </div>

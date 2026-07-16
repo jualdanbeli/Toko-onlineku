@@ -3,11 +3,11 @@ import { useAuth } from "@/lib/auth";
 import { useLogout, useGetCart, useGetCategories } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { JDBLogo } from "@/components/JDBLogo";
 import {
   ShoppingCart,
   Search,
   User,
-  Store,
   LogOut,
   ShieldCheck,
   HeadphonesIcon,
@@ -74,13 +74,8 @@ export function Navbar() {
       <div className="bg-primary text-primary-foreground">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="bg-white/20 p-1.5 rounded-lg">
-              <Store className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-extrabold text-white tracking-tight hidden sm:inline-block">
-              jualdanbeli
-            </span>
+          <Link href="/" className="flex items-center shrink-0">
+            <JDBLogo size="sm" variant="full" />
           </Link>
 
           {/* Search bar */}
