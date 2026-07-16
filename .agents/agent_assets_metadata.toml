@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "H54ZSwwvEjYFsx7HU4v0K"
@@ -18,3 +17,9 @@ id = "4AdeedfUQKeGxJ-tnKpiW"
 uri = "file://artifacts/jualdanbeli-mobile/assets/images/hero-banner.png"
 type = "image"
 title = "generated_image"
+
+[[outputs]]
+id = "2yFHLmxtBwERqdYVe_xTo"
+uri = "file://jualdanbeli-source.tar.gz"
+type = "unspecified"
+title = "jualdanbeli — Source Code (tar.gz)"
