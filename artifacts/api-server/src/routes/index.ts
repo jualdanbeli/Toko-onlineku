@@ -21,6 +21,7 @@ import liveRouter from "./live";
 import moderationRouter from "./moderation";
 import operatorRouter from "./operator";
 import billsRouter from "./bills";
+import stafRouter from "./staf";
 
 const router: IRouter = Router();
 
@@ -46,5 +47,6 @@ router.use(liveRouter);
 router.use(moderationRouter);
 router.use(operatorRouter);
 router.use(billsRouter);
+router.use(stafRouter);
 
 export default router;

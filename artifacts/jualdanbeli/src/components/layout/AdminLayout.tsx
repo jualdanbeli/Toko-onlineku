@@ -163,6 +163,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
                   { href: "/admin/analytics", label: "Analytics Platform" },
                   { href: "/admin/platform-settings", label: "Pengaturan Platform" },
                   { href: "/admin/reports", label: "Laporan Keuangan" },
+                  { href: "/admin/staf", label: "Kelola Staf Admin" },
                 ].map((item) => {
                   const isActive = location === item.href;
                   return (
