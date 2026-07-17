@@ -92,6 +92,24 @@ export async function requireAdmin(req: Request, res: Response, next: NextFuncti
   });
 }
 
+// Hanya pemilik platform (paten) yang bisa akses operator dashboard
+const OWNER_EMAIL = "radjapamungkas007@gmail.com";
+
+export async function requireOwner(req: Request, res: Response, next: NextFunction): Promise<void> {
+  await requireAdmin(req, res, async () => {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    if (req.user.email !== OWNER_EMAIL) {
+      req.log?.warn({ userId: req.user.id, email: req.user.email, url: req.url }, "Unauthorized owner access attempt");
+      res.status(403).json({ error: "Akses ditolak. Hanya pemilik platform yang bisa mengakses fitur ini." });
+      return;
+    }
+    next();
+  });
+}
+
 export function optionalAuth(req: Request, res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {

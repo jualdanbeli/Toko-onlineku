@@ -123,7 +123,10 @@ export function MainLayout({ children }: MainLayoutProps) {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 mt-10 pt-6 border-t flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-          <span>© {new Date().getFullYear()} jualdanbeli · NIB <span className="font-mono">2403240017145</span> · Terdaftar di OSS Indonesia</span>
+          <div className="flex flex-col gap-1 items-center md:items-start">
+            <span>© {new Date().getFullYear()} <strong>jualdanbeli™</strong> · NIB <span className="font-mono">2403240017145</span> · Terdaftar di OSS Indonesia</span>
+            <span className="text-[10px] text-muted-foreground/60">J&amp;B™ dan jualdanbeli™ adalah merek dagang milik eksklusif <strong>Hari Muhammad Hamzah</strong>. Seluruh hak cipta dilindungi undang-undang.</span>
+          </div>
           <div className="flex gap-4">
             <Link href="/terms" className="hover:text-primary transition-colors">Syarat & Ketentuan</Link>
             <Link href="/privacy" className="hover:text-primary transition-colors">Kebijakan Privasi</Link>

@@ -30,7 +30,7 @@ export function JDBLogo({ size = "md", variant = "full", className = "" }: JDBLo
       {icon}
       <span className="flex flex-col leading-none">
         <span className={`font-extrabold tracking-tight text-white ${textSizes[size]}`}>
-          jualdanbeli
+          jualdanbeli<sup className="text-orange-400 font-bold" style={{fontSize:"0.45em",verticalAlign:"super"}}>™</sup>
         </span>
         <span className={`font-bold tracking-[0.2em] text-orange-300 uppercase ${subSizes[size]}`}>
           Jual &amp; Beli Aman

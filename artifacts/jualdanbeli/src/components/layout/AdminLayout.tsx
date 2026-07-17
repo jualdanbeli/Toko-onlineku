@@ -78,10 +78,12 @@ export function AdminLayout({ children }: { children: ReactNode }) {
         { icon: Tag, label: "Voucher / Kupon", href: "/admin/vouchers" },
         { icon: HeadphonesIcon, label: "CS / Pengaduan", href: "/admin/support" },
         { icon: ShieldCheck, label: "Keamanan Sistem", href: "/admin/security" },
-        { icon: Settings, label: "Pengaturan Platform", href: "/admin/platform-settings" },
       ],
     },
   ];
+
+  const OWNER_EMAIL = "radjapamungkas007@gmail.com";
+  const isOwner = user?.email === OWNER_EMAIL;
 
   const totalAlerts = (stats?.pendingReports || 0) + (stats?.pendingDisputes || 0) + (stats?.pendingWithdrawals || 0);
 
@@ -94,7 +96,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           <JDBLogo size="sm" variant="icon" />
           <div className="flex-1 min-w-0">
             <div className="font-bold text-white text-sm tracking-wide">Admin Portal</div>
-            <div className="text-[10px] text-slate-500">jualdanbeli operator</div>
+            <div className="text-[10px] text-slate-500">{isOwner ? "👑 Pemilik / Operator" : "jualdanbeli operator"}</div>
           </div>
           {totalAlerts > 0 && (
             <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-pulse">
@@ -115,6 +117,14 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
         </div>
+
+        {/* Owner badge */}
+        {isOwner && (
+          <div className="mx-4 mt-3 mb-1 px-3 py-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+            <p className="text-[10px] font-bold text-yellow-400 uppercase tracking-wider">👑 Pemegang Hak Eksklusif</p>
+            <p className="text-[10px] text-yellow-400/70 mt-0.5">J&amp;B™ jualdanbeli — Semua hak dilindungi</p>
+          </div>
+        )}
 
         {/* Nav */}
         <nav className="flex-1 p-3 space-y-4 overflow-y-auto">
@@ -143,6 +153,36 @@ export function AdminLayout({ children }: { children: ReactNode }) {
               </div>
             </div>
           ))}
+
+          {/* OWNER-ONLY section */}
+          {isOwner && (
+            <div>
+              <p className="text-[10px] font-bold text-yellow-600 px-3 mb-1 tracking-widest">👑 OPERATOR (PEMILIK)</p>
+              <div className="space-y-0.5">
+                {[
+                  { href: "/admin/analytics", label: "Analytics Platform" },
+                  { href: "/admin/platform-settings", label: "Pengaturan Platform" },
+                  { href: "/admin/reports", label: "Laporan Keuangan" },
+                ].map((item) => {
+                  const isActive = location === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-sm ${
+                        isActive
+                          ? "bg-yellow-500/20 text-yellow-300 font-semibold"
+                          : "hover:bg-yellow-500/10 hover:text-yellow-300 text-yellow-500/70"
+                      }`}
+                    >
+                      <Settings className={`w-4 h-4 shrink-0 ${isActive ? "text-yellow-300" : ""}`} />
+                      <span className="truncate flex-1">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </nav>
 
         {/* Footer */}

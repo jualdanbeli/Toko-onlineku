@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db, ordersTable, usersTable, transactionsTable } from "@workspace/db";
 import { eq, sql, desc, and, gte, between } from "drizzle-orm";
-import { requireAdmin } from "../lib/auth";
+import { requireAdmin, requireOwner } from "../lib/auth";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { join } from "path";
 
@@ -33,7 +33,7 @@ function saveSettings(settings: Record<string, any>) {
   try { writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2)); } catch {}
 }
 
-router.get("/admin/analytics", requireAdmin, async (req, res): Promise<void> => {
+router.get("/admin/analytics", requireOwner, async (req, res): Promise<void> => {
   const { period = "30" } = req.query;
   const days = Math.min(parseInt(period as string, 10) || 30, 365);
   const since = new Date();
@@ -157,11 +157,11 @@ router.get("/admin/analytics", requireAdmin, async (req, res): Promise<void> => 
   });
 });
 
-router.get("/admin/platform-settings", requireAdmin, async (req, res): Promise<void> => {
+router.get("/admin/platform-settings", requireOwner, async (req, res): Promise<void> => {
   res.json(loadSettings());
 });
 
-router.patch("/admin/platform-settings", requireAdmin, async (req, res): Promise<void> => {
+router.patch("/admin/platform-settings", requireOwner, async (req, res): Promise<void> => {
   const current = loadSettings();
   const updated = { ...current, ...req.body };
   saveSettings(updated);
@@ -169,7 +169,7 @@ router.patch("/admin/platform-settings", requireAdmin, async (req, res): Promise
   res.json(updated);
 });
 
-router.get("/admin/financial-report", requireAdmin, async (req, res): Promise<void> => {
+router.get("/admin/financial-report", requireOwner, async (req, res): Promise<void> => {
   const { from, to } = req.query;
   const settings = loadSettings();
   const commissionRate = settings.commissionRate / 100;
