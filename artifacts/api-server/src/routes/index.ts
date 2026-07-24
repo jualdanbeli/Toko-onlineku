@@ -22,6 +22,7 @@ import moderationRouter from "./moderation";
 import operatorRouter from "./operator";
 import billsRouter from "./bills";
 import stafRouter from "./staf";
+import aiChatRouter from "./ai-chat";
 
 const router: IRouter = Router();
 
@@ -48,5 +49,6 @@ router.use(moderationRouter);
 router.use(operatorRouter);
 router.use(billsRouter);
 router.use(stafRouter);
+router.use(aiChatRouter);
 
 export default router;

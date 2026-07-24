@@ -59,6 +59,7 @@ import Pembayaran from "@/pages/pembayaran";
 import Merek from "@/pages/merek";
 import MasukOperator from "@/pages/masuk-operator";
 import KelolStaf from "@/pages/admin/staf";
+import CsAi from "@/pages/cs-ai";
 
 // Global 401/403 handler — auto-logout bila token expired atau diblokir
 const queryClient = new QueryClient({
@@ -144,6 +145,8 @@ function Router() {
       <Route path="/merek" component={Merek} />
       <Route path="/masuk-operator" component={MasukOperator} />
       <Route path="/admin/staf" component={KelolStaf} />
+      <Route path="/cs-ai" component={CsAi} />
+      <Route path="/masuk-admin">{() => { window.location.href = "/admin"; return null; }}</Route>
 
       <Route component={NotFound} />
     </Switch>

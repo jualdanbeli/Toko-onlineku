@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { Navbar } from "./Navbar";
 import { Link } from "wouter";
 import { JDBLogo } from "@/components/JDBLogo";
+import { AiChatButton } from "@/components/AiChatButton";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { ShieldCheck, Truck, HeadphonesIcon, CreditCard, Clock, Shield, AlertCircle } from "lucide-react";
 
 interface MainLayoutProps {
@@ -134,6 +136,15 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
         </div>
       </footer>
+
+      {/* AI Chat floating button */}
+      <AiChatButton />
+
+      {/* Mobile bottom navbar (Shopee-style) */}
+      <MobileBottomNav />
+
+      {/* Padding bawah untuk mobile bottom nav */}
+      <div className="h-14 md:hidden" />
     </div>
   );
 }
