@@ -11,22 +11,25 @@
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FAF9F7"
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.jualdanbeli.app",
       "buildNumber": "1",
+      "icon": "./assets/images/icon.png",
       "infoPlist": {
         "NSCameraUsageDescription": "Untuk foto produk yang akan dijual",
-        "NSPhotoLibraryUsageDescription": "Untuk memilih foto produk dari galeri"
+        "NSPhotoLibraryUsageDescription": "Untuk memilih foto produk dari galeri",
+        "CFBundleDisplayName": "jualdanbeli"
       }
     },
     "android": {
       "package": "com.jualdanbeli.app",
       "versionCode": 1,
+      "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#F47820"
       },
       "permissions": [

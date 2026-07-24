@@ -4,19 +4,25 @@ uploads = []
 id = "H54ZSwwvEjYFsx7HU4v0K"
 uri = "file://artifacts/jualdanbeli-mobile/assets/images/icon.png"
 type = "image"
-title = "generated_image"
+title = "jualdanbeli app icon"
 
 [[generated]]
 id = "fnpNQ12ex_yni8j6SesnX"
 uri = "file://artifacts/jualdanbeli-mobile/assets/images/splash-icon.png"
 type = "image"
-title = "generated_image"
+title = "jualdanbeli splash icon"
 
 [[generated]]
 id = "4AdeedfUQKeGxJ-tnKpiW"
 uri = "file://artifacts/jualdanbeli-mobile/assets/images/hero-banner.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "XbdHicp5sLzJUzgp5j147"
+uri = "file://artifacts/jualdanbeli-mobile/assets/images/adaptive-icon.png"
+type = "image"
+title = "jualdanbeli adaptive icon"
 
 [[outputs]]
 id = "2yFHLmxtBwERqdYVe_xTo"
