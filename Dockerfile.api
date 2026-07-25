@@ -1,4 +1,4 @@
-FROM node:24-alpine AS base
+FROM node:24-slim AS base
 RUN corepack enable pnpm
 
 FROM base AS deps
@@ -20,7 +20,7 @@ COPY scripts/ ./scripts/
 RUN pnpm run typecheck:libs
 RUN pnpm --filter @workspace/api-server run build
 
-FROM node:24-alpine AS runner
+FROM node:24-slim AS runner
 RUN corepack enable pnpm
 WORKDIR /app
 ENV NODE_ENV=production

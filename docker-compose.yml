@@ -19,8 +19,7 @@ services:
   migrate:
     build:
       context: .
-      dockerfile: Dockerfile.api
-    command: ["node", "-e", "require('./artifacts/api-server/dist/migrate.mjs')"]
+      dockerfile: Dockerfile.migrate
     depends_on:
       db:
         condition: service_healthy
@@ -42,12 +41,12 @@ services:
       NODE_ENV: production
       PORT: 8080
       DATABASE_URL: postgres://jualdanbeli:${DB_PASSWORD:-changeme123}@db:5432/jualdanbeli
-      SESSION_SECRET: ${SESSION_SECRET}
-      MIDTRANS_SERVER_KEY: ${MIDTRANS_SERVER_KEY}
-      MIDTRANS_CLIENT_KEY: ${MIDTRANS_CLIENT_KEY}
+      SESSION_SECRET: ${SESSION_SECRET:-jualdanbeli_secret_ganti_ini_segera}
+      MIDTRANS_SERVER_KEY: ${MIDTRANS_SERVER_KEY:-}
+      MIDTRANS_CLIENT_KEY: ${MIDTRANS_CLIENT_KEY:-}
       MIDTRANS_IS_PRODUCTION: ${MIDTRANS_IS_PRODUCTION:-false}
-      RAJAONGKIR_API_KEY: ${RAJAONGKIR_API_KEY}
-      RESEND_API_KEY: ${RESEND_API_KEY}
+      RAJAONGKIR_API_KEY: ${RAJAONGKIR_API_KEY:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
       APP_URL: ${APP_URL:-http://localhost}
       PRIVATE_OBJECT_DIR: ${PRIVATE_OBJECT_DIR:-/app/uploads}
     volumes:
