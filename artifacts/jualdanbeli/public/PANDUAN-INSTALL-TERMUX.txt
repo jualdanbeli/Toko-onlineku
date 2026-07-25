@@ -1,0 +1,359 @@
+================================================================================
+   PANDUAN LENGKAP INSTALL jualdanbeli via TERMUX
+   Khusus HP Android - Tanpa Laptop
+   Pemilik: Hari Muhammad Hamzah
+   Merek Dagang: J&B(TM) jualdanbeli(TM)
+================================================================================
+
+YANG DIBUTUHKAN SEBELUM MULAI
+-------------------------------
+- HP Android dengan aplikasi Termux (download di F-Droid, BUKAN Play Store)
+- VPS Ubuntu 20.04 atau 22.04 (beli dari Contabo, Hetzner, DigitalOcean, dll)
+- IP address VPS Anda (contoh: 103.12.34.56)
+- Password root VPS
+- File ZIP jualdanbeli sudah didownload ke HP
+
+
+================================================================================
+LANGKAH 1 - SETUP TERMUX DI HP
+================================================================================
+
+Buka aplikasi Termux di HP, lalu ketik perintah berikut satu per satu.
+Tekan Enter setelah setiap baris.
+
+    pkg update -y && pkg upgrade -y
+
+Tunggu selesai, lalu:
+
+    pkg install -y openssh
+
+Aktifkan akses penyimpanan HP:
+
+    termux-setup-storage
+
+Akan muncul popup "Allow Termux to access files" - pilih ALLOW / IZINKAN.
+
+
+================================================================================
+LANGKAH 2 - DOWNLOAD FILE APLIKASI
+================================================================================
+
+Masih di Termux, pindah ke folder Downloads:
+
+    cd ~/storage/downloads
+
+Download file aplikasi (lakukan SAAT halaman Replit masih terbuka di browser):
+
+    wget -O jualdanbeli.zip "https://83c1caef-bd42-41e9-bbef-b03644a06d2d-00-1qxhyxxycm0wj.pike.replit.dev/jualdanbeli-STANDALONE.zip"
+
+Tunggu sampai selesai. Cek ukuran file (harus sekitar 13 MB):
+
+    ls -lh jualdanbeli.zip
+
+Jika ukuran file muncul dan tidak 0 bytes, berarti download berhasil.
+
+
+================================================================================
+LANGKAH 3 - MASUK KE VPS DARI TERMUX
+================================================================================
+
+Ganti 103.12.34.56 di bawah ini dengan IP VPS Anda yang sebenarnya:
+
+    ssh root@103.12.34.56
+
+Akan muncul pertanyaan (pertama kali saja):
+"Are you sure you want to continue connecting (yes/no)?"
+Ketik:  yes  lalu tekan Enter.
+
+Masukkan password root VPS Anda. Saat mengetik password, layar tidak bergerak
+(tidak ada bintang atau titik) - itu NORMAL. Ketik terus lalu tekan Enter.
+
+Jika berhasil masuk, tampilan akan berubah menjadi seperti:
+    root@nama-vps:~#
+
+Selamat, Anda sudah di dalam VPS.
+
+
+================================================================================
+LANGKAH 4 - BUAT FOLDER APLIKASI DI VPS
+================================================================================
+
+Ketik perintah berikut di dalam VPS (setelah berhasil ssh):
+
+    mkdir -p /opt/jualdanbeli
+
+Cek folder sudah ada:
+
+    ls /opt/
+
+
+================================================================================
+LANGKAH 5 - KIRIM FILE ZIP DARI HP KE VPS
+================================================================================
+
+PENTING: Untuk langkah ini, Anda perlu MEMBUKA TAB BARU di Termux.
+Caranya: geser layar Termux dari kiri ke kanan, lalu ketuk tombol + (tambah).
+
+Di tab baru Termux (BUKAN di dalam VPS), ketik:
+Ganti 103.12.34.56 dengan IP VPS Anda:
+
+    scp ~/storage/downloads/jualdanbeli.zip root@103.12.34.56:/opt/jualdanbeli/
+
+Masukkan password VPS saat diminta. Tunggu sampai muncul progress 100%.
+Proses ini bisa 1-5 menit tergantung kecepatan internet.
+
+Setelah selesai, kembali ke tab VPS (geser layar, pilih tab yang pertama).
+
+
+================================================================================
+LANGKAH 6 - EKSTRAK FILE DI VPS
+================================================================================
+
+Di dalam VPS (tab yang pertama), ketik:
+
+    cd /opt/jualdanbeli
+
+Ekstrak file ZIP:
+
+    unzip -o jualdanbeli.zip
+
+Tunggu sampai selesai mengekstrak (ada banyak file, bisa 1-2 menit).
+
+Beri izin eksekusi pada script installer:
+
+    chmod +x install.sh
+
+
+================================================================================
+LANGKAH 7 - JALANKAN INSTALLER OTOMATIS
+================================================================================
+
+Jalankan script installer:
+
+    bash install.sh
+
+Script akan otomatis melakukan semua langkah berikut:
+  [1/7] Memeriksa sistem operasi
+  [2/7] Update dan install paket Ubuntu
+  [3/7] Install Docker
+  [4/7] Setup folder aplikasi
+  [5/7] Ekstrak dan siapkan file
+  [6/7] Konfigurasi file .env
+  [7/7] Build dan jalankan aplikasi
+
+PERKIRAAN WAKTU: 10 sampai 20 menit.
+Jangan tutup Termux atau matikan HP selama proses berlangsung.
+
+Saat muncul pertanyaan:
+    "Edit .env sekarang? (y/N):"
+Ketik:  y  lalu tekan Enter untuk mengisi konfigurasi penting.
+
+
+================================================================================
+LANGKAH 8 - KONFIGURASI FILE .ENV (PENGATURAN APLIKASI)
+================================================================================
+
+Setelah mengetik y, akan terbuka editor teks (nano). Anda akan melihat isi
+file konfigurasi. Ubah bagian-bagian berikut:
+
+SESSION_SECRET=
+Ubah nilainya menjadi kata-kata acak panjang, contoh:
+SESSION_SECRET=Har1MuhammadHamzah_JualDanBeli_SuperSecret_2024_ABC123
+
+(Opsional - isi jika sudah punya akun):
+MIDTRANS_SERVER_KEY=     <- isi dari dashboard.midtrans.com
+MIDTRANS_CLIENT_KEY=     <- isi dari dashboard.midtrans.com
+RAJAONGKIR_API_KEY=      <- isi dari rajaongkir.com
+RESEND_API_KEY=          <- isi dari resend.com
+OPENAI_API_KEY=          <- isi dari platform.openai.com (untuk AI chat Jubi)
+
+Cara SIMPAN dan KELUAR dari editor nano:
+  1. Tekan CTRL + X (tombol kontrol dan X bersamaan)
+  2. Akan muncul "Save modified buffer?" - tekan Y
+  3. Tekan Enter
+
+Installer akan lanjut otomatis setelah ini.
+
+
+================================================================================
+LANGKAH 9 - TUNGGU SAMPAI SELESAI
+================================================================================
+
+Installer akan membangun (build) aplikasi Docker. Ini yang paling lama.
+Anda akan melihat banyak teks berjalan di layar - itu normal.
+
+Tunggu sampai muncul pesan:
+    ✅ INSTALASI BERHASIL!
+
+Dan akan muncul informasi seperti:
+    Marketplace    : http://103.12.34.56
+    Login Operator : http://103.12.34.56/masuk-operator
+    Login Admin    : http://103.12.34.56/masuk-admin
+    AI Chat CS     : http://103.12.34.56/cs-ai
+
+
+================================================================================
+LANGKAH 10 - CEK APLIKASI BERJALAN
+================================================================================
+
+Setelah install selesai, cek semua layanan berjalan:
+
+    docker compose ps
+
+Anda harus melihat daftar seperti ini (STATUS harus "Up" atau "running"):
+    NAME                    STATUS
+    jualdanbeli-db-1        Up (healthy)
+    jualdanbeli-migrate-1   Exited (0)     <- ini normal, hanya jalan sekali
+    jualdanbeli-api-1       Up
+    jualdanbeli-web-1       Up
+
+Jika semua Up, buka browser HP dan ketik IP VPS:
+    http://103.12.34.56
+
+Aplikasi jualdanbeli sudah online dan bisa diakses dari mana saja!
+
+
+================================================================================
+AKUN LOGIN DEFAULT (SEGERA GANTI PASSWORDNYA!)
+================================================================================
+
+    Operator/Pemilik : radjapamungkas007@gmail.com  | Password: Admin123!
+    Seller 1         : seller1@jualdanbeli.com       | Password: Seller123!
+    Seller 2         : seller2@jualdanbeli.com       | Password: Seller123!
+    Pembeli          : buyer@jualdanbeli.com          | Password: Buyer123!
+
+PINTU MASUK TERPISAH:
+    Semua pengguna   : http://IP-VPS/
+    Khusus Operator  : http://IP-VPS/masuk-operator
+    Khusus Admin     : http://IP-VPS/masuk-admin
+    AI Chat Jubi     : http://IP-VPS/cs-ai
+
+
+================================================================================
+PERINTAH SEHARI-HARI (DARI TERMUX)
+================================================================================
+
+Masuk ke VPS:
+    ssh root@103.12.34.56
+
+Setelah masuk VPS, masuk ke folder aplikasi:
+    cd /opt/jualdanbeli
+
+Lihat status semua layanan:
+    docker compose ps
+
+Restart aplikasi (jika ada masalah):
+    docker compose restart
+
+Restart hanya API server:
+    docker compose restart api
+
+Lihat log error secara langsung:
+    docker compose logs -f api
+
+Lihat log web:
+    docker compose logs -f web
+
+Stop semua layanan:
+    docker compose down
+
+Jalankan lagi setelah stop:
+    docker compose up -d
+
+Lihat penggunaan RAM dan CPU:
+    docker stats
+
+
+================================================================================
+UPDATE APLIKASI DI MASA DEPAN
+================================================================================
+
+Saat ada versi baru dari Replit, jalankan ini di VPS:
+
+    cd /opt/jualdanbeli && bash update.sh
+
+Script update akan:
+  - Download versi baru dari URL yang Anda berikan
+  - Update semua file kode
+  - TIDAK mengubah file .env dan database Anda
+  - Restart otomatis semua layanan
+
+
+================================================================================
+MENGATASI ERROR UMUM
+================================================================================
+
+ERROR: "Cannot connect to the Docker daemon"
+Solusi:
+    systemctl start docker
+    systemctl enable docker
+    docker compose up -d
+
+ERROR: "Port 80 already in use" atau "address already in use"
+Solusi:
+    systemctl stop nginx
+    systemctl disable nginx
+    docker compose up -d
+
+ERROR: "database connection failed" atau "ECONNREFUSED"
+Solusi: Tunggu 30 detik lalu:
+    docker compose restart api
+
+ERROR: "No space left on device"
+Solusi: Bersihkan Docker yang tidak terpakai:
+    docker system prune -f
+    docker compose up -d
+
+ERROR saat unzip "cannot find zipfile directory"
+Solusi: File ZIP rusak saat download, ulangi dari Langkah 2.
+
+Lihat semua log lengkap untuk mencari error:
+    docker compose logs --tail=100
+
+
+================================================================================
+BACKUP DATABASE (LAKUKAN SECARA RUTIN)
+================================================================================
+
+Backup database ke file:
+    docker compose exec db pg_dump -U jualdanbeli jualdanbeli > backup-$(date +%Y%m%d).sql
+
+Kirim backup ke HP (jalankan dari Termux, bukan dari VPS):
+    scp root@103.12.34.56:/opt/jualdanbeli/backup-*.sql ~/storage/downloads/
+
+
+================================================================================
+INFORMASI TEKNIS
+================================================================================
+
+Folder instalasi      : /opt/jualdanbeli
+File konfigurasi      : /opt/jualdanbeli/.env
+Data database         : Volume Docker "postgres_data" (aman dari uninstall)
+File upload produk    : Volume Docker "uploads_data"
+Port API server       : 8080 (internal Docker)
+Port website          : 80 (HTTP) dan 443 (HTTPS)
+
+Stack teknologi:
+  - Backend   : Node.js 24 + Express 5
+  - Frontend  : React + Vite + Tailwind CSS
+  - Database  : PostgreSQL 16
+  - Container : Docker + Docker Compose
+  - Web server: Nginx
+
+
+================================================================================
+DUKUNGAN & INFORMASI
+================================================================================
+
+Aplikasi      : jualdanbeli(TM) Marketplace Indonesia
+Pemilik       : Hari Muhammad Hamzah
+Merek Dagang  : J&B(TM) dan jualdanbeli(TM)
+NIB           : 2403240017145
+KBLI          : 47911 - Perdagangan melalui Internet
+
+Hak cipta dilindungi undang-undang. Seluruh kode sumber dan merek dagang
+adalah milik eksklusif Hari Muhammad Hamzah.
+
+================================================================================
+   SELESAI - Simpan panduan ini untuk referensi di masa mendatang
+================================================================================
