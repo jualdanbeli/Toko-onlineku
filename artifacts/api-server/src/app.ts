@@ -35,15 +35,37 @@ app.use(
 );
 
 // ─── CORS — hanya izinkan domain yang dikenal ─────────────────────────────
-const ALLOWED_ORIGINS = [
-  /^https:\/\/jual-beli-aman\.replit\.app$/,
-  /^https:\/\/.*\.replit\.app$/,
-  /^https:\/\/.*\.repl\.co$/,
-  /^https:\/\/.*\.replit\.dev$/,
-  /^https:\/\/.*\.pike\.replit\.dev$/,
-  /^http:\/\/localhost(:\d+)?$/,
-  /^http:\/\/127\.0\.0\.1(:\d+)?$/,
-];
+// Ambil domain dari APP_URL env jika ada (untuk self-hosted VPS)
+function buildAllowedOrigins(): (RegExp | string)[] {
+  const origins: (RegExp | string)[] = [
+    /^https:\/\/jual-beli-aman\.replit\.app$/,
+    /^https:\/\/.*\.replit\.app$/,
+    /^https:\/\/.*\.repl\.co$/,
+    /^https:\/\/.*\.replit\.dev$/,
+    /^https:\/\/.*\.pike\.replit\.dev$/,
+    /^http:\/\/localhost(:\d+)?$/,
+    /^http:\/\/127\.0\.0\.1(:\d+)?$/,
+  ];
+  const appUrl = process.env.APP_URL;
+  if (appUrl) {
+    try {
+      const parsed = new URL(appUrl);
+      const base = `${parsed.protocol}//${parsed.host}`;
+      origins.push(base);
+      // Izinkan juga versi www dan non-www
+      if (parsed.host.startsWith("www.")) {
+        origins.push(`${parsed.protocol}//${parsed.host.slice(4)}`);
+      } else {
+        origins.push(`${parsed.protocol}//www.${parsed.host}`);
+      }
+    } catch {
+      // biarkan jika APP_URL tidak valid
+    }
+  }
+  return origins;
+}
+
+const ALLOWED_ORIGINS = buildAllowedOrigins();
 
 app.use(
   cors({

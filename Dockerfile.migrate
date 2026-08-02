@@ -4,9 +4,10 @@ RUN corepack enable pnpm
 WORKDIR /app
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json tsconfig.base.json ./
 COPY lib/db/ ./lib/db/
-COPY scripts/package.json ./scripts/
+COPY scripts/package.json ./scripts/package.json
 COPY scripts/src/ ./scripts/src/
 COPY scripts/tsconfig.json ./scripts/tsconfig.json
 RUN pnpm install --frozen-lockfile
 
-CMD ["pnpm", "--filter", "@workspace/db", "run", "push-force"]
+# Jalankan migrasi schema lalu seed admin
+CMD sh -c 'pnpm --filter @workspace/db run push-force && pnpm --filter @workspace/scripts run seed-admin'
