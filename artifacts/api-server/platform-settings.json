@@ -1,0 +1,10 @@
+{
+  "platformName": "jualdanbeli",
+  "commissionRate": 1,
+  "umkmTaxRate": 0.5,
+  "maxWithdrawalAmount": 50000000,
+  "minWithdrawalAmount": 10000,
+  "autoReleaseEscrowDays": 7,
+  "maintenanceMode": true,
+  "contactEmail": "admin@jualdanbeli.com"
+}
