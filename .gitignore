@@ -47,3 +47,40 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+
+# Backups and private data
+backups/
+*.sql
+*.sql.gz
+*.dump
+uploads/
+tmp/
+logs/
+
+# Android local/build files
+android/.gradle/
+android/local.properties
+android/**/build/
+android/captures/
+android/.idea/
+*.apk
+*.aab
+
+# Local backup files
+*.bak
+*.bak-*
+*.backup
+*.backup-*
+*.before-*
+*.orig
+=
